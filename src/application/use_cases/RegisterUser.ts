@@ -40,6 +40,7 @@ export class RegisterUser {
     const createdUser = await this.userRepository.createUser(newUser);
 
     // Return user info without password
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _password, ...safeUser } = createdUser;
     
     return safeUser;
