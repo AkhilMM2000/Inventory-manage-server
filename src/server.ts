@@ -1,19 +1,29 @@
 import express from "express";
 import { connectDB } from "./infrastructure/config/database"; 
 import "./infrastructure/config/container";
+import cors from 'cors'
+import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+import userRoutes from "./presentation/routes/userRoutes";
+import { errorHandler } from "./middleware/ErrorHanlder"; 
+
 export const startServer = async () => {
+  dotenv.config()
   await connectDB();
 
   const app = express();
   const PORT = process.env.PORT || 5000;
-
   app.use(express.json());
+  app.use(cookieParser());
+  app.use(cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true, // ✅ Allow cookies from frontend (e.g. JWT)
+  }));
 
-  app.get("/", (_req, res) => {
-    res.send("✅ Inventory Management API is running!");
-  });
-
+ 
+  app.use("/api/auth", userRoutes);
+   app.use(errorHandler);
   app.listen(PORT, () => {
-    console.log(`🚀 Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on http://localhost:${PORT}`);
   });
 };

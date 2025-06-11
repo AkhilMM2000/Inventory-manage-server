@@ -1,5 +1,6 @@
 import { injectable } from "tsyringe";
 import bcrypt from "bcrypt";
+
 import { HashService } from "../../application/services/HashService"; 
 
 @injectable()
