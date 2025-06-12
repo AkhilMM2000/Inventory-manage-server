@@ -6,6 +6,7 @@ const router = Router();
 
 router
   .post("/register", UserController.register)
-  .post("/login", UserController.login);
+  .post("/login", UserController.login)
+  .post("/refresh-token", UserController.refreshToken)
 
 export default router;
