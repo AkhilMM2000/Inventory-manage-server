@@ -5,4 +5,6 @@ export const ERROR_MESSAGES = {
     INVALID_CREDENTIALS: "Invalid email or password",
     USER_ALREADY_EXISTS: "User already  exists",
     INVALID_REFRESH_TOKEN: "Invalid refresh token",
+    INVALID_ACCESS_TOKEN:"  Invalid or expired token",
+    NO_TOKEN_PROVIDED:'No token provided',
 }
