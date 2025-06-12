@@ -7,4 +7,5 @@ export const ERROR_MESSAGES = {
     INVALID_REFRESH_TOKEN: "Invalid refresh token",
     INVALID_ACCESS_TOKEN:"  Invalid or expired token",
     NO_TOKEN_PROVIDED:'No token provided',
+    LOGOUT_SUCCESS: "Logout successful",
 }
