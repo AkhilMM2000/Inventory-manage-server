@@ -4,6 +4,8 @@ import { container } from "tsyringe";
 import { RegisterUser } from "../../application/use_cases/RegisterUser";
 import { RefreshAccessToken } from "../../application/use_cases/RefreshAccessToken";
 import { LoginUser } from "../../application/use_cases/LoginUser";
+import { HTTP_STATUS_CODES } from "../../constants/HttpStatuscode";
+import { ERROR_MESSAGES } from "../../constants/ErrorMessage";
 
 export class UserController {
   static async register(req: Request, res: Response, next: NextFunction) {
@@ -53,5 +55,18 @@ static async refreshToken(req: Request, res: Response, next: NextFunction) {
     next(err);
   }
 }
+static async logout(req: Request, res: Response, next: NextFunction) {
+  try {
 
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+
+     res.status(HTTP_STATUS_CODES.OK).json({ message: ERROR_MESSAGES.LOGOUT_SUCCESS });
+  } catch (err) {
+    next(err);
+  }
+}
 }
