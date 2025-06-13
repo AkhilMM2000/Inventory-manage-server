@@ -8,6 +8,7 @@ const router = Router();
 const authMiddleware = container.resolve(AuthMiddleware);
 
 router
-  .post("/", authMiddleware.protectRoute(), ItemController.addItem);
-
+  .post("/", authMiddleware.protectRoute(), ItemController.addItem)
+  .get("/",  ItemController.getAllItems)
+  .get("/search", authMiddleware.protectRoute(), ItemController.searchItems);
 export default router;

@@ -63,6 +63,7 @@ export class MongoItemRepository implements IItemRepository {
       limit,
     };
   } catch (error) {
+    console.log(error)
     if (error instanceof Error) {
       throw new AppError(error.message, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
     }
@@ -141,7 +142,7 @@ async searchItems(query: string, page: number, limit: number): Promise<Paginated
 
   private mapToItem(doc:ItemDocument): Item {
     return {
-      id: doc.id.toString(),
+      id: (doc._id ?? doc.id)?.toString() || "",
       name: doc.name,
       description: doc.description,
       quantity: doc.quantity,
