@@ -4,6 +4,11 @@ import { container } from "tsyringe";
 import { AddItem } from "../../application/use_cases/AddItem";
 import { GetAllItems } from "../../application/use_cases/GetAllItems";
 import { SearchItems } from "../../application/use_cases/SearchItems";
+import { GetItemById } from "../../application/use_cases/GetItemById";
+import { UpdateItem } from "../../application/use_cases/UpdateItem";
+import { DeleteItem } from "../../application/use_cases/DeleteItem";
+import { HTTP_STATUS_CODES } from "../../constants/HttpStatuscode";
+import { ERROR_MESSAGES } from "../../constants/ErrorMessage";
 
 export class ItemController {
   static async addItem(req: Request, res: Response, next: NextFunction) {
@@ -18,7 +23,7 @@ export class ItemController {
         price,
       });
 
-      res.status(201).json({ item: createdItem });
+      res.status(HTTP_STATUS_CODES.CREATED).json({ item: createdItem });
     } catch (error) {
       next(error);
     }
@@ -32,7 +37,7 @@ static async getAllItems(req: Request, res: Response, next: NextFunction) {
     const getAllItems = container.resolve(GetAllItems);
     const result = await getAllItems.execute(page, limit);
 
-    res.status(200).json(result);
+    res.status(HTTP_STATUS_CODES.OK).json(result);
   } catch (err) {
     next(err);
   }
@@ -46,7 +51,49 @@ static async searchItems(req: Request, res: Response, next: NextFunction) {
     const searchItems = container.resolve(SearchItems);
     const result = await searchItems.execute(query, page, limit);
 
-  res.status(200).json(result);
+  res.status(HTTP_STATUS_CODES.OK).json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+static async getItemById(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { id } = req.params;
+
+    const getItemById = container.resolve(GetItemById);
+    const item = await getItemById.execute(id);
+
+    res.status(HTTP_STATUS_CODES.OK).json({ item });
+  } catch (err) {
+    next(err);
+  }
+}
+static async updateItem(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { id } = req.params;
+
+    // Filter only defined fields from body
+    const filteredUpdate = Object.fromEntries(
+      Object.entries(req.body).filter(([, value]) => value !== undefined)
+    );
+
+    const updateItem = container.resolve(UpdateItem);
+    const item = await updateItem.execute(id, filteredUpdate);
+
+ res.status(HTTP_STATUS_CODES.OK).json({ item });
+  } catch (err) {
+    next(err);
+  }
+}
+
+static async deleteItem(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { id } = req.params;
+
+    const deleteItem = container.resolve(DeleteItem);
+    await deleteItem.execute(id);
+
+ res.status(HTTP_STATUS_CODES.OK).json({ message:ERROR_MESSAGES.ITEM_DELETED});
   } catch (err) {
     next(err);
   }

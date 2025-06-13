@@ -9,5 +9,9 @@ export const ERROR_MESSAGES = {
     NO_TOKEN_PROVIDED:'No token provided',
     LOGOUT_SUCCESS: "Logout successful",
     UNEXPECTED_ERROR: "An unexpected error occurred",
-    INVALID_ITEM_DATA:"Invalid item data provided"
+    INVALID_ITEM_DATA:"Invalid item data provided",
+    ITEM_NOT_FOUND:"Item not found",
+    ITEM_UPDATE_ERROR:"Item not found or update failed",
+    NOT_FOUND_OR_DELETE_ERROR:"Item not found or could not be deleted",
+    ITEM_DELETED: "Item deleted successfully" 
 }
