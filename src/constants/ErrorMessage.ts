@@ -8,4 +8,6 @@ export const ERROR_MESSAGES = {
     INVALID_ACCESS_TOKEN:"  Invalid or expired token",
     NO_TOKEN_PROVIDED:'No token provided',
     LOGOUT_SUCCESS: "Logout successful",
+    UNEXPECTED_ERROR: "An unexpected error occurred",
+    INVALID_ITEM_DATA:"Invalid item data provided"
 }

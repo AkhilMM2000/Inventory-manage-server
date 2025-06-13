@@ -1,10 +1,15 @@
 import express from "express";
-import { connectDB } from "./infrastructure/config/database"; 
+
+// eslint-disable-next-line import/order
+import { connectDB } from "./infrastructure/config/database";
+ 
 import "./infrastructure/config/container";
 import cors from 'cors'
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+
 import userRoutes from "./presentation/routes/userRoutes";
+import itemRoutes from "./presentation/routes/itemRoutes";
 import { errorHandler } from "./middleware/ErrorHanlder"; 
 
 export const startServer = async () => {
@@ -22,6 +27,7 @@ export const startServer = async () => {
 
  
   app.use("/api/auth", userRoutes);
+  app.use("/api/items", itemRoutes);
    app.use(errorHandler);
   app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

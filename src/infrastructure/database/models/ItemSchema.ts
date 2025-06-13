@@ -1,14 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { Item } from "../../../domain/models/Item";
 
-export interface ItemDocument extends Document {
-  name: string;
-  description: string;
-  quantity: number;
-  price: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
+export interface ItemDocument extends Document, Omit<Item, "id"> {}
 const ItemSchema: Schema<ItemDocument> = new Schema(
   {
     name: { type: String, required: true },
