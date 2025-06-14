@@ -10,5 +10,6 @@ router
   .post("/register", UserController.register)
   .post("/login",UserController.login)
   .post("/refresh-token", UserController.refreshToken)
-  .post("/logout", authMiddleware.protectRoute(), UserController.logout);
+  .post("/logout", authMiddleware.protectRoute(), UserController.logout)
+  .get("/me", authMiddleware.protectRoute(), UserController.getMe);
 export default router;

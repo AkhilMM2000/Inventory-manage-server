@@ -6,12 +6,13 @@ import { RefreshAccessToken } from "../../application/use_cases/RefreshAccessTok
 import { LoginUser } from "../../application/use_cases/LoginUser";
 import { HTTP_STATUS_CODES } from "../../constants/HttpStatuscode";
 import { ERROR_MESSAGES } from "../../constants/ErrorMessage";
+import { AuthenticatedRequest } from "../../middleware/AuthMiddleware";
 
 export class UserController {
   static async register(req: Request, res: Response, next: NextFunction) {
     try {
       const { fullName, email, password } = req.body;
-
+    console.log(req.body)
       const registerUser = container.resolve(RegisterUser);
       const user = await registerUser.execute({ fullName, email, password });
 
@@ -55,6 +56,14 @@ static async refreshToken(req: Request, res: Response, next: NextFunction) {
     next(err);
   }
 }
+static async getMe(req:AuthenticatedRequest, res: Response, next: NextFunction) {
+  try {
+    res.status(HTTP_STATUS_CODES.OK).json({ user: req.user });
+  } catch (err) {
+    next(err);
+  }
+}
+
 static async logout(req: Request, res: Response, next: NextFunction) {
   try {
 

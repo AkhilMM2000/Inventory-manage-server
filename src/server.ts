@@ -22,7 +22,7 @@ export const startServer = async () => {
   app.use(cookieParser());
   app.use(cors({
     origin: process.env.FRONTEND_URL,
-    credentials: true, // ✅ Allow cookies from frontend (e.g. JWT)
+    credentials: true, 
   }));
 
  

@@ -38,7 +38,7 @@ export class LoginUser {
       throw new AppError("Invalid email or password", 401);
     }
 
-    const payload = { userId: user.id!, email: user.email };
+    const payload = { userId: user.id!, email: user.email,name:user.fullName };
     const accessToken = this.authService.generateAccessToken(payload);
     const refreshToken = this.authService.generateRefreshToken(payload);
 
