@@ -12,7 +12,7 @@ export class UserController {
   static async register(req: Request, res: Response, next: NextFunction) {
     try {
       const { fullName, email, password } = req.body;
-    console.log(req.body)
+    
       const registerUser = container.resolve(RegisterUser);
       const user = await registerUser.execute({ fullName, email, password });
 
@@ -31,7 +31,7 @@ export class UserController {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -46,12 +46,12 @@ export class UserController {
 
 static async refreshToken(req: Request, res: Response, next: NextFunction) {
   try {
-    const refreshToken = req.cookies.refreshToken;
+    const refreshToken = req.cookies["refreshToken"];
 
     const refreshUseCase = container.resolve(RefreshAccessToken);
     const accessToken = refreshUseCase.execute(refreshToken);
 
-     res.status(200).json({ accessToken });
+     res.status(HTTP_STATUS_CODES.OK).json({ accessToken });
   } catch (err) {
     next(err);
   }

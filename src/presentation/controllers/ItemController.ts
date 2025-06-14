@@ -44,7 +44,7 @@ static async getAllItems(req: Request, res: Response, next: NextFunction) {
 }
 static async searchItems(req: Request, res: Response, next: NextFunction) {
   try {
-    const query = (req.query.q as string) || "";
+    const query = (req.query.search as string) || "";
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
 
