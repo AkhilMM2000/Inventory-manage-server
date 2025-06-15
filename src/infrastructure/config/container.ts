@@ -8,6 +8,8 @@ import { AuthService } from "../../application/services/AuthServices";
 import { JWTAuthService } from "../services/JwtAuthService";
 import { IItemRepository } from "../../domain/repositories/IItemRepository";
 import { MongoItemRepository } from "../database/repositories/MongoItemRepository";
+import { ICustomerRepository } from "../../domain/repositories/ICustomerRepository";
+import { MongoCustomerRepository } from "../database/repositories/MongoCostomerRepository";
 
 
 container.register<HashService>("IHashService", {
@@ -25,3 +27,7 @@ container.register<AuthService>("IAuthService", {
 container.register<IItemRepository>("IItemRepository",{
  useClass:MongoItemRepository  ,
 });
+
+container.register<ICustomerRepository>("ICustomerRepository",{
+ useClass:MongoCustomerRepository,
+})

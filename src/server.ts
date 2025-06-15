@@ -10,6 +10,7 @@ import dotenv from "dotenv";
 
 import userRoutes from "./presentation/routes/userRoutes";
 import itemRoutes from "./presentation/routes/itemRoutes";
+ import customerRoutes from "./presentation/routes/CustomerRoute";
 import { errorHandler } from "./middleware/ErrorHanlder"; 
 
 export const startServer = async () => {
@@ -28,6 +29,8 @@ export const startServer = async () => {
  
   app.use("/api/auth", userRoutes);
   app.use("/api/items", itemRoutes);
+ 
+app.use("/api/customers", customerRoutes);
    app.use(errorHandler);
   app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

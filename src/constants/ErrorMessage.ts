@@ -13,5 +13,8 @@ export const ERROR_MESSAGES = {
     ITEM_NOT_FOUND:"Item not found",
     ITEM_UPDATE_ERROR:"Item not found or update failed",
     NOT_FOUND_OR_DELETE_ERROR:"Item not found or could not be deleted",
-    ITEM_DELETED: "Item deleted successfully" 
+    ITEM_DELETED: "Item deleted successfully" ,
+    REQUIRED_FIELDS_MISSING:"required field missing",
+    INVALID_PAGINATION_PARAMS:"invalid pagination params",
+    CUSTOMER_NOT_FOUND:"costomer not found"
 }

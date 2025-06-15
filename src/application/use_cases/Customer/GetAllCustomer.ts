@@ -1,0 +1,24 @@
+import { inject, injectable } from "tsyringe";
+import { ICustomerRepository } from "../../../domain/repositories/ICustomerRepository"; 
+import { AppError } from "../../../domain/errors/AppError";
+import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode";
+import { ERROR_MESSAGES } from "../../../constants/ErrorMessage"; 
+
+@injectable()
+export class GetAllCustomers {
+  constructor(
+    @inject("ICustomerRepository")
+    private customerRepository: ICustomerRepository
+  ) {}
+
+  async execute(page: number, limit: number, search?: string) {
+    if (page <= 0 || limit <= 0) {
+      throw new AppError(
+        ERROR_MESSAGES.INVALID_PAGINATION_PARAMS,
+        HTTP_STATUS_CODES.BAD_REQUEST
+      );
+    }
+
+    return await this.customerRepository.getAllCustomers(page, limit, search);
+  }
+}
