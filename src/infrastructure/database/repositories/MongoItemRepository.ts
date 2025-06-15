@@ -137,7 +137,30 @@ async searchItems(query: string, page: number, limit: number): Promise<Paginated
   throw new AppError(ERROR_MESSAGES.UNEXPECTED_ERROR, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
     }
   }
+async reduceItemStock(itemId: string, quantity: number): Promise<void> {
+  try {
+    const item = await ItemModel.findById(itemId);
 
+    if (!item) {
+      throw new AppError("Item not found", HTTP_STATUS_CODES.NOT_FOUND);
+    }
+
+    if (item.quantity < quantity) {
+      throw new AppError(
+        `Only ${item.quantity} units of ${item.name} available`,
+        HTTP_STATUS_CODES.BAD_REQUEST
+      );
+    }
+
+    item.quantity -= quantity;
+    await item.save();
+  } catch (error) {
+    throw new AppError(
+      error instanceof Error ? error.message : ERROR_MESSAGES.UNEXPECTED_ERROR,
+      HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
+    );
+  }
+}
  
 
   private mapToItem(doc:ItemDocument): Item {

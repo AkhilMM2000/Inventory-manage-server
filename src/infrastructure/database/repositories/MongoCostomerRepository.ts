@@ -59,6 +59,7 @@ export class MongoCustomerRepository implements ICustomerRepository {
            }
          ]);
      
+        
          const items = results[0]?.data || [];
          const total = results[0]?.totalCount[0]?.count || 0;
      

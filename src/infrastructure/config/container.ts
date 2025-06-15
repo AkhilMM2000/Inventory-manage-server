@@ -10,6 +10,8 @@ import { IItemRepository } from "../../domain/repositories/IItemRepository";
 import { MongoItemRepository } from "../database/repositories/MongoItemRepository";
 import { ICustomerRepository } from "../../domain/repositories/ICustomerRepository";
 import { MongoCustomerRepository } from "../database/repositories/MongoCostomerRepository";
+import { ISaleRepository } from "../../domain/repositories/ISaleRepository";
+import { MongoSaleRepository } from "../database/repositories/MongoSaleRepository";
 
 
 container.register<HashService>("IHashService", {
@@ -30,4 +32,7 @@ container.register<IItemRepository>("IItemRepository",{
 
 container.register<ICustomerRepository>("ICustomerRepository",{
  useClass:MongoCustomerRepository,
+})
+container.register<ISaleRepository>("ISaleRepository",{
+  useClass:MongoSaleRepository
 })
