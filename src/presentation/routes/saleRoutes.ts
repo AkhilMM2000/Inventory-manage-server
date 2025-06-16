@@ -9,6 +9,6 @@ const router = express.Router();
 const authMiddleware = container.resolve(AuthMiddleware);
 router
 .post("/", authMiddleware.protectRoute(), SaleController.createSale)
-.get("/", authMiddleware.protectRoute(), SaleController.getAllSales);
-
+.get("/", authMiddleware.protectRoute(), SaleController.getAllSales)
+.get("/customer/:id",authMiddleware.protectRoute(),SaleController.getCustomerLedger);
 export default router;

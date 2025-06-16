@@ -76,4 +76,23 @@ export class MongoSaleRepository implements ISaleRepository {
       );
     }
   }
+  async getSalesByCustomer(customerId: string): Promise<Sale[]> {
+  try {
+    const pipeline = [
+      { $match: { customerId } },
+      { $sort:  { createdAt: -1 as const } },
+    ];
+
+    const results = await SaleModel.aggregate(pipeline);
+
+    // Use existing mapping method
+    return results.map((doc: SaleDocument) => this.mapToSale(doc));
+  } catch (error) {
+    throw new AppError(
+      error instanceof Error ? error.message : "Failed to fetch customer ledger",
+      HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
+    );
+  }
+}
+
 }

@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { container } from "tsyringe";
 import { CreateSale } from "../../application/use_cases/sales/CreateSale";
 import { GetAllSales } from "../../application/use_cases/sales/GetAllSales";
+import { GetCustomerLedger } from "../../application/use_cases/Customer/GetCustomerLedger";
 
 
 export class SaleController {
@@ -26,6 +27,18 @@ export class SaleController {
       const result = await getAllSales.execute(page, limit, search, paymentType);
 
       res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+   static async getCustomerLedger(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+
+      const getCustomerLedger = container.resolve(GetCustomerLedger);
+      const ledger = await getCustomerLedger.execute(id);
+
+       res.status(200).json(ledger);
     } catch (error) {
       next(error);
     }
