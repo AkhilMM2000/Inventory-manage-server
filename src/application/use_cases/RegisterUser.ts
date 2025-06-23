@@ -37,7 +37,7 @@ export class RegisterUser {
       password: hashedPassword,
     };
 
-    const createdUser = await this.userRepository.createUser(newUser);
+    const createdUser = await this.userRepository.create(newUser);
 
     // Return user info without password
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

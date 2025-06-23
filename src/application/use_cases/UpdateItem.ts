@@ -13,7 +13,7 @@ export class UpdateItem {
   ) {}
 
   async execute(id: string, updatedItem: Partial<Item>): Promise<Item> {
-    const item = await this.itemRepository.updateItem(id, updatedItem);
+    const item = await this.itemRepository.update(id, updatedItem);
 
     if (!item) {
       throw new AppError(ERROR_MESSAGES.ITEM_UPDATE_ERROR, HTTP_STATUS_CODES.NOT_FOUND);

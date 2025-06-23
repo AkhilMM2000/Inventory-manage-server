@@ -37,7 +37,7 @@ export class CreateSale {
     let totalAmount = 0;
 
     for (const item of items) {
-      const found = await this.itemRepository.getItemById(item.itemId);
+      const found = await this.itemRepository.findById(item.itemId);
 
       if (!found) {
         throw new AppError(
@@ -67,6 +67,6 @@ export class CreateSale {
       totalAmount,
     };
 
-    return await this.saleRepository.createSale(newSale);
+    return await this.saleRepository.create(newSale);
   }
 }

@@ -2,7 +2,8 @@ import { PaginatedResult } from "../../shared/PaginatedResult";
 import { Sale } from "../models/Sales"; 
 
 export interface ISaleRepository {
-  createSale(sale: Sale): Promise<Sale>;
+
+  create(data: Partial<Sale>): Promise<Sale>;
 getSalesByCustomer(customerId: string): Promise<Sale[]>;
 
   getAllSales(

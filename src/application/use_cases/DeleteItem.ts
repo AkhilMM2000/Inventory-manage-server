@@ -13,7 +13,7 @@ export class DeleteItem {
   ) {}
 
   async execute(id: string): Promise<void> {
-    const deleted = await this.itemRepository.deleteItem(id);
+    const deleted = await this.itemRepository.delete(id);
 
     if (!deleted) {
       throw new AppError(ERROR_MESSAGES.NOT_FOUND_OR_DELETE_ERROR, HTTP_STATUS_CODES.NOT_FOUND);

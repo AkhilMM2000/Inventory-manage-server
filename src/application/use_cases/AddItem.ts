@@ -34,6 +34,6 @@ export class AddItem {
       price,
     };
 
-    return await this.itemRepository.createItem(item);
+    return await this.itemRepository.create(item);
   }
 }

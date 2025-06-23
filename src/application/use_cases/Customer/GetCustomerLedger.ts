@@ -13,7 +13,7 @@ export class GetCustomerLedger {
   ) {}
 
   async execute(customerId: string) {
-    const customer = await this.customerRepo.getCustomerById(customerId);
+    const customer = await this.customerRepo.findById(customerId);
     if (!customer) {
       throw new AppError("Customer not found", HTTP_STATUS_CODES.NOT_FOUND);
     }

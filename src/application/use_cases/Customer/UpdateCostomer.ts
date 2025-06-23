@@ -13,7 +13,7 @@ export class UpdateCustomer {
   ) {}
 
   async execute(id: string, updatedItem: Partial<Customer>): Promise<Customer> {
-    const updated = await this.customerRepository.updateCustomer(id, updatedItem);
+    const updated = await this.customerRepository.update(id, updatedItem);
 
     if (!updated) {
       throw new AppError(ERROR_MESSAGES.CUSTOMER_NOT_FOUND, HTTP_STATUS_CODES.NOT_FOUND);

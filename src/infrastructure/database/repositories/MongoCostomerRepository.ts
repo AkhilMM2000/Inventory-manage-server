@@ -6,12 +6,16 @@ import { CustomerModel, CustomerDocument } from "../models/CustomerSchema";
 import { AppError } from "../../../domain/errors/AppError";
 import { ERROR_MESSAGES } from "../../../constants/ErrorMessage";
 import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode"; 
+import { BaseRepository } from "./BaseRepository";
 
 @injectable()
-export class MongoCustomerRepository implements ICustomerRepository {
-  private mapToCustomer(doc: CustomerDocument): Customer {
+export class MongoCustomerRepository   extends BaseRepository<Customer> implements ICustomerRepository 
+{
+  protected model = CustomerModel;
+
+  protected map(doc: CustomerDocument): Customer {
     return {
-      id: (doc._id ?? doc.id)?.toString() || "",
+    id: (doc._id ?? doc.id)?.toString() || "",
       name: doc.name,
       address: doc.address,
       mobile: doc.mobile,
@@ -20,24 +24,14 @@ export class MongoCustomerRepository implements ICustomerRepository {
     };
   }
 
-  async createCustomer(customer: Customer): Promise<Customer> {
-    try {
-      const created = await CustomerModel.create(customer);
-      return this.mapToCustomer(created);
-    } catch (error) {
-      throw new AppError(
-        error instanceof Error ? error.message : ERROR_MESSAGES.UNEXPECTED_ERROR,
-        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
-      );
-    }
-  }
+  
 
   async getAllCustomers(page: number, limit: number, search = "") {
     try {
      const regex = new RegExp(search, "i");
          const skip = (page - 1) * limit;
      
-         const results = await CustomerModel.aggregate([
+         const results = await this.model.aggregate([
            {
              $match: {
                $or: [
@@ -64,7 +58,7 @@ export class MongoCustomerRepository implements ICustomerRepository {
          const total = results[0]?.totalCount[0]?.count || 0;
      
          return {
-           data: items.map(this.mapToCustomer),
+           data: items.map(this.map),
            total,
            page,
            limit,
@@ -77,41 +71,4 @@ export class MongoCustomerRepository implements ICustomerRepository {
     }
   }
 
-  async getCustomerById(id: string): Promise<Customer | null> {
-    try {
-      const customer = await CustomerModel.findById(id);
-      return customer ? this.mapToCustomer(customer) : null;
-    } catch (error) {
-      throw new AppError(
-        error instanceof Error ? error.message : ERROR_MESSAGES.UNEXPECTED_ERROR,
-        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
-      );
-    }
-  }
-
-  async updateCustomer(id: string, updatedData: Partial<Customer>): Promise<Customer | null> {
-    try {
-      const updated = await CustomerModel.findByIdAndUpdate(id, updatedData, {
-        new: true,
-      });
-      return updated ? this.mapToCustomer(updated) : null;
-    } catch (error) {
-      throw new AppError(
-        error instanceof Error ? error.message : ERROR_MESSAGES.UNEXPECTED_ERROR,
-        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
-      );
-    }
-  }
-
-  async deleteCustomer(id: string): Promise<boolean> {
-    try {
-      const result = await CustomerModel.findByIdAndDelete(id);
-      return !!result;
-    } catch (error) {
-      throw new AppError(
-        error instanceof Error ? error.message : ERROR_MESSAGES.UNEXPECTED_ERROR,
-        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
-      );
-    }
-  }
 }

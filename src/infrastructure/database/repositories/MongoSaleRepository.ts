@@ -5,10 +5,14 @@ import { SaleModel,SaleDocument } from "../models/SalesSchema";
 import { AppError } from "../../../domain/errors/AppError";
 import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode"; 
 import { ERROR_MESSAGES } from "../../../constants/ErrorMessage";
+import { BaseRepository } from "./BaseRepository";
 
 @injectable()
-export class MongoSaleRepository implements ISaleRepository {
-  private mapToSale(doc: SaleDocument): Sale {
+export class MongoSaleRepository extends BaseRepository<Sale> implements ISaleRepository {
+ 
+
+  protected model = SaleModel;
+  protected map(doc: SaleDocument): Sale {
     return {
       id: (doc._id ?? doc.id)?.toString() || "",
       customerId: doc.customerId,
@@ -20,17 +24,7 @@ export class MongoSaleRepository implements ISaleRepository {
     };
   }
 
-  async createSale(sale: Sale): Promise<Sale> {
-    try {
-      const created = await SaleModel.create(sale);
-      return this.mapToSale(created);
-    } catch (error) {
-      throw new AppError(
-        error instanceof Error ? error.message : ERROR_MESSAGES.UNEXPECTED_ERROR,
-        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
-      );
-    }
-  }
+
 
   async getAllSales(
     page: number,
@@ -60,11 +54,11 @@ export class MongoSaleRepository implements ISaleRepository {
         { $limit: limit },
       ];
 
-      const sales = await SaleModel.aggregate(pipeline);
-      const total = await SaleModel.countDocuments(matchStage.$match);
+      const sales = await this.model.aggregate(pipeline);
+      const total = await this.model.countDocuments(matchStage.$match);
 
       return {
-        data: sales.map((doc: SaleDocument) => this.mapToSale(doc)),
+        data: sales.map((doc: SaleDocument) => this.map(doc)),
         total,
         page,
         limit,
@@ -83,10 +77,10 @@ export class MongoSaleRepository implements ISaleRepository {
       { $sort:  { createdAt: -1 as const } },
     ];
 
-    const results = await SaleModel.aggregate(pipeline);
+    const results = await this.model.aggregate(pipeline);
 
     // Use existing mapping method
-    return results.map((doc: SaleDocument) => this.mapToSale(doc));
+    return results.map((doc: SaleDocument) => this.map(doc));
   } catch (error) {
     throw new AppError(
       error instanceof Error ? error.message : "Failed to fetch customer ledger",

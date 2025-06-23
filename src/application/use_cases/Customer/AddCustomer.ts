@@ -34,6 +34,6 @@ export class AddCustomer {
       mobile,
     };
 
-    return await this.customerRepository.createCustomer(newCustomer);
+    return await this.customerRepository.create(newCustomer);
   }
 }

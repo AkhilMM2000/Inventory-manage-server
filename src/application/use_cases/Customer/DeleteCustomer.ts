@@ -13,7 +13,7 @@ export class DeleteCustomer {
   ) {}
 
   async execute(id: string): Promise<void> {
-    const deleted = await this.customerRepository.deleteCustomer(id);
+    const deleted = await this.customerRepository.delete(id);
     if (!deleted) {
       throw new AppError(
         ERROR_MESSAGES.CUSTOMER_NOT_FOUND,

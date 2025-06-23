@@ -14,7 +14,7 @@ export class GetItemById {
   ) {}
 
   async execute(id: string): Promise<Item> {
-    const item = await this.itemRepository.getItemById(id);
+    const item = await this.itemRepository.findById(id);
 
     if (!item) {
       throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, HTTP_STATUS_CODES.NOT_FOUND);
