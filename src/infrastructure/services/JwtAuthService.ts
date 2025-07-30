@@ -11,7 +11,7 @@ export class JWTAuthService implements AuthService {
   private refreshSecret = process.env.REFRESH_TOKEN_SECRET!;
 
   generateAccessToken(payload: object): string {
-    return jwt.sign(payload, this.accessSecret, { expiresIn: "15m" });
+    return jwt.sign(payload, this.accessSecret, { expiresIn: "25m" });
   }
 
   generateRefreshToken(payload: object): string {

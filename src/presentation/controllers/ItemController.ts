@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { container } from "tsyringe";
 
-import { AddItem } from "../../application/use_cases/AddItem";
-import { GetAllItems } from "../../application/use_cases/GetAllItems";
-import { SearchItems } from "../../application/use_cases/SearchItems";
-import { GetItemById } from "../../application/use_cases/GetItemById";
-import { UpdateItem } from "../../application/use_cases/UpdateItem";
-import { DeleteItem } from "../../application/use_cases/DeleteItem";
+import { AddItem } from "../../application/use_cases/Item/AddItem";
+import { GetAllItems } from "../../application/use_cases/Item/GetAllItems";
+import { SearchItems } from "../../application/use_cases/Item/SearchItems"; 
+import { GetItemById } from "../../application/use_cases/Item/GetItemById";
+import { UpdateItem } from "../../application/use_cases/Item/UpdateItem";
+import { DeleteItem } from "../../application/use_cases/Item/DeleteItem";
 import { HTTP_STATUS_CODES } from "../../constants/HttpStatuscode";
 import { ERROR_MESSAGES } from "../../constants/ErrorMessage";
 
@@ -99,3 +99,4 @@ static async deleteItem(req: Request, res: Response, next: NextFunction) {
   }
 }
 }
+

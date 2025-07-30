@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { container } from "tsyringe";
 
-import { RegisterUser } from "../../application/use_cases/RegisterUser";
-import { RefreshAccessToken } from "../../application/use_cases/RefreshAccessToken";
-import { LoginUser } from "../../application/use_cases/LoginUser";
+import { RegisterUser } from "../../application/use_cases/Auth/RegisterUser";
+import { RefreshAccessToken } from "../../application/use_cases/Auth/RefreshAccessToken";
+import { LoginUser } from "../../application/use_cases/Auth/LoginUser";
 import { HTTP_STATUS_CODES } from "../../constants/HttpStatuscode";
 import { ERROR_MESSAGES } from "../../constants/ErrorMessage";
 import { AuthenticatedRequest } from "../../middleware/AuthMiddleware";
@@ -31,7 +31,7 @@ export class UserController {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
+      sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -70,7 +70,9 @@ static async logout(req: Request, res: Response, next: NextFunction) {
     res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+
     });
 
      res.status(HTTP_STATUS_CODES.OK).json({ message: ERROR_MESSAGES.LOGOUT_SUCCESS });

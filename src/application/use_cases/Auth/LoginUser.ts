@@ -1,12 +1,12 @@
 import { inject, injectable } from "tsyringe";
 
-import { UserRepository } from "../../domain/repositories/UserRepository"; 
-import { HashService } from "../services/HashService"; 
-import { AuthService } from "../services/AuthServices"; 
-import { AppError } from "../../domain/errors/AppError";
-import { User } from "../../domain/models/User";
-import { HTTP_STATUS_CODES } from "../../constants/HttpStatuscode";
-import { ERROR_MESSAGES } from "../../constants/ErrorMessage";
+import { UserRepository } from "../../../domain/repositories/UserRepository"; 
+import { HashService } from "../../services/HashService"; 
+import { AuthService } from "../../services/AuthServices"; 
+import { AppError } from "../../../domain/errors/AppError";
+import { User } from "../../../domain/models/User";
+import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode";
+import { ERROR_MESSAGES } from "../../../constants/ErrorMessage";
 
 interface LoginDTO {
   email: string;

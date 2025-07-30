@@ -6,7 +6,7 @@ import { GetAllCustomers } from "../../application/use_cases/Customer/GetAllCust
 import { UpdateCustomer } from "../../application/use_cases/Customer/UpdateCostomer";
 import { DeleteCustomer } from "../../application/use_cases/Customer/DeleteCustomer";
 
-export class CustomerController {
+export class CustomerController{
   static async addCustomer(req: Request, res: Response, next: NextFunction) {
     try {
       const addCustomer = container.resolve(AddCustomer);
@@ -16,6 +16,7 @@ export class CustomerController {
       next(error);
     }
   }
+
  static async getAllCustomers(req: Request, res: Response, next: NextFunction) {
     try {
       const page = parseInt(req.query.page as string) || 1;

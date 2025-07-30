@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
 
-import { UserRepository } from "../../domain/repositories/UserRepository"; 
-import { HashService } from "../services/HashService"; 
-import { User } from "../../domain/models/User";
-import { AppError } from "../../domain/errors/AppError";
+import { UserRepository } from "../../../domain/repositories/UserRepository"; 
+import { HashService } from "../../services/HashService"; 
+import { User } from "../../../domain/models/User";
+import { AppError } from "../../../domain/errors/AppError";
 
 interface RegisterUserDTO {
   fullName: string;

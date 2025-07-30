@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
 
-import { IItemRepository } from "../../domain/repositories/IItemRepository";
-import { Item } from "../../domain/models/Item";
-import { PaginatedResult } from "../../shared/PaginatedResult"; 
+import { IItemRepository } from "../../../domain/repositories/IItemRepository"; 
+import { Item } from "../../../domain/models/Item"; 
+import { PaginatedResult } from "../../../shared/PaginatedResult"; 
 
 @injectable()
 export class SearchItems {
