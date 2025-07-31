@@ -8,6 +8,8 @@ import { IGetAllItemsUseCase } from "../../application/use_cases/Item/IGetAllIte
 import { GetAllItemsUseCase } from "../../application/use_cases/Item/GetAllItemsUseCase";
 import { IGetItemByIdUseCase } from "../../application/use_cases/Item/IGetItemById";
 import { GetItemByIdUseCase } from "../../application/use_cases/Item/GetItemByIdUseCase";
+import { ISearchItemsUseCase } from "../../application/use_cases/Item/ISearchItemsUseCase";
+import { SearchItemsUseCase } from "../../application/use_cases/Item/SearchItemsUseCase";
 
 
 container.register<IAddItemUseCase>("IAddItemUseCase", {
@@ -20,6 +22,9 @@ useClass:DeleteItemUseCase
 
 container.register<IGetAllItemsUseCase>("IGetAllItemsUseCase", {
   useClass: GetAllItemsUseCase,
+});
+container.register<ISearchItemsUseCase>("ISearchItemsUseCase", {
+  useClass: SearchItemsUseCase,
 });
 
 container.register<IGetItemByIdUseCase>("IGetItemByIdUseCase", {

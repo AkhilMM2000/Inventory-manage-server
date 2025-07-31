@@ -10,7 +10,7 @@ const authMiddleware = container.resolve(AuthMiddleware);
 router
   .post("/", authMiddleware.protectRoute(), itemController.addItem.bind(itemController))
   .get("/", authMiddleware.protectRoute(), itemController.getAllItems.bind(itemController))
-  .get("/search", authMiddleware.protectRoute(), ItemController.searchItems)
+  .get("/search", authMiddleware.protectRoute(), itemController.searchItems.bind(itemController))
   .get("/:itemId", authMiddleware.protectRoute(),itemController.getItemById.bind(itemController))
   .put("/:itemId", authMiddleware.protectRoute(), ItemController.updateItem)
   .delete("/:itemId",authMiddleware.protectRoute(),itemController.deleteItem.bind(itemController))

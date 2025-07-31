@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { container, inject, singleton } from "tsyringe";
-
-import { SearchItems } from "../../application/use_cases/Item/SearchItems"; 
 import { UpdateItem } from "../../application/use_cases/Item/UpdateItem";
 import { HTTP_STATUS_CODES } from "../../constants/HttpStatuscode";
 import { ERROR_MESSAGES } from "../../constants/ErrorMessage";
@@ -9,6 +7,7 @@ import { IAddItemUseCase } from "../../application/use_cases/Item/IAddItemUseCas
 import { IDeleteItemUseCase } from "../../application/use_cases/Item/IDeleteItemUseCase";
 import { IGetAllItemsUseCase } from "../../application/use_cases/Item/IGetAllItemsUseCase";
 import { IGetItemByIdUseCase } from "../../application/use_cases/Item/IGetItemById";
+import { ISearchItemsUseCase } from "../../application/use_cases/Item/ISearchItemsUseCase";
 
 @singleton()
 export class ItemController {
@@ -20,7 +19,9 @@ export class ItemController {
     @inject("IGetAllItemsUseCase")
     private getAllItemUseCase:IGetAllItemsUseCase,
     @inject("IGetItemByIdUseCase")
-    private getItemByIdUseCase:IGetItemByIdUseCase
+    private getItemByIdUseCase:IGetItemByIdUseCase,
+       @inject("ISearchItemsUseCase")
+    private searchItemsUseCase: ISearchItemsUseCase
   ) {}
 
    async addItem(req: Request, res: Response, next: NextFunction) {
@@ -64,14 +65,14 @@ export class ItemController {
     next(err);
   }
 }
-static async searchItems(req: Request, res: Response, next: NextFunction) {
+async searchItems(req: Request, res: Response, next: NextFunction) {
   try {
     const query = (req.query.search as string) || "";
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
 
-    const searchItems = container.resolve(SearchItems);
-    const result = await searchItems.execute(query, page, limit);
+    
+    const result = await this.searchItemsUseCase.execute(query, page, limit);
 
   res.status(HTTP_STATUS_CODES.OK).json(result);
   } catch (err) {
