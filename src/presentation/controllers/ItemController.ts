@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { container, inject, singleton } from "tsyringe";
-import { GetAllItems } from "../../application/use_cases/Item/GetAllItems";
+
 import { SearchItems } from "../../application/use_cases/Item/SearchItems"; 
 import { GetItemById } from "../../application/use_cases/Item/GetItemById";
 import { UpdateItem } from "../../application/use_cases/Item/UpdateItem";
@@ -9,13 +9,17 @@ import { HTTP_STATUS_CODES } from "../../constants/HttpStatuscode";
 import { ERROR_MESSAGES } from "../../constants/ErrorMessage";
 import { IAddItemUseCase } from "../../application/use_cases/Item/IAddItemUseCase";
 import { IDeleteItemUseCase } from "../../application/use_cases/Item/IDeleteItemUseCase";
+import { IGetAllItemsUseCase } from "../../application/use_cases/Item/IGetAllItemsUseCase";
+
 @singleton()
 export class ItemController {
   constructor(
     @inject("IAddItemUseCase")
     private addItemUseCase: IAddItemUseCase,
     @inject("IDeleteItemUseCase")
-    private deleteItemUseCase:IDeleteItemUseCase
+    private deleteItemUseCase:IDeleteItemUseCase,
+    @inject("IGetAllItemsUseCase")
+    private getAllItemUseCase:IGetAllItemsUseCase 
   ) {}
 
    async addItem(req: Request, res: Response, next: NextFunction) {
@@ -46,15 +50,15 @@ export class ItemController {
   }
 }
   
-static async getAllItems(req: Request, res: Response, next: NextFunction) {
+ async getAllItems(req: Request, res: Response, next: NextFunction) {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
 
-    const getAllItems = container.resolve(GetAllItems);
-    const result = await getAllItems.execute(page, limit);
-
-    res.status(HTTP_STATUS_CODES.OK).json(result);
+  
+    const getAllItems= await this.getAllItemUseCase.execute(page, limit);
+   
+    res.status(HTTP_STATUS_CODES.OK).json(getAllItems);
   } catch (err) {
     next(err);
   }
