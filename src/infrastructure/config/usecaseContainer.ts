@@ -10,6 +10,8 @@ import { IGetItemByIdUseCase } from "../../application/use_cases/Item/IGetItemBy
 import { GetItemByIdUseCase } from "../../application/use_cases/Item/GetItemByIdUseCase";
 import { ISearchItemsUseCase } from "../../application/use_cases/Item/ISearchItemsUseCase";
 import { SearchItemsUseCase } from "../../application/use_cases/Item/SearchItemsUseCase";
+import { CreateSale } from "../../application/use_cases/sales/CreateSale";
+import { ICreateSaleUseCase } from "../../application/use_cases/sales/ISaleUseCase";
 
 
 container.register<IAddItemUseCase>("IAddItemUseCase", {
@@ -29,4 +31,8 @@ container.register<ISearchItemsUseCase>("ISearchItemsUseCase", {
 
 container.register<IGetItemByIdUseCase>("IGetItemByIdUseCase", {
   useClass: GetItemByIdUseCase,
+});
+
+container.register<ICreateSaleUseCase>("ICreateSaleUseCase", {
+  useClass: CreateSale,
 });

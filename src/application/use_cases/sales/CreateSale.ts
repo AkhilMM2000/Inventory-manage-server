@@ -6,6 +6,7 @@ import { Sale,SaleItem } from "../../../domain/models/Sales";
 import { AppError } from "../../../domain/errors/AppError";
 import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode";
 import { ERROR_MESSAGES } from "../../../constants/ErrorMessage";
+import { ICreateSaleUseCase } from "./ISaleUseCase";
 
 interface CreateSaleDTO {
   customerId: string;
@@ -15,7 +16,7 @@ interface CreateSaleDTO {
 }
 
 @injectable()
-export class CreateSale {
+export class  CreateSale implements ICreateSaleUseCase{
   constructor(
     @inject("ISaleRepository")
     private saleRepository: ISaleRepository,

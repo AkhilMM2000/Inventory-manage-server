@@ -1,16 +1,21 @@
 import { Request, Response, NextFunction } from "express";
-import { container } from "tsyringe";
+import { container, inject } from "tsyringe";
 import { CreateSale } from "../../application/use_cases/sales/CreateSale";
 import { GetAllSales } from "../../application/use_cases/sales/GetAllSales";
 import { GetCustomerLedger } from "../../application/use_cases/Customer/GetCustomerLedger";
-
+import { ICreateSaleUseCase } from "../../application/use_cases/sales/ISaleUseCase";
+import { HTTP_STATUS_CODES } from "../../constants/HttpStatuscode";
 
 export class SaleController {
-  static async createSale(req: Request, res: Response, next: NextFunction) {
+    constructor(
+    @inject("ICreateSaleUseCase")
+    private createSaleUseCase: ICreateSaleUseCase
+  ) {}
+  async createSale(req: Request, res: Response, next: NextFunction) {
     try {
-      const createSale = container.resolve(CreateSale);
-      const sale = await createSale.execute(req.body);
-      res.status(201).json({ sale });
+    
+      const sale = await this.createSaleUseCase.execute(req.body);
+      res.status(HTTP_STATUS_CODES.OK).json({ sale });
     } catch (error) {
       next(error);
     }
