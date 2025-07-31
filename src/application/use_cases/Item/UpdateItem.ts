@@ -4,9 +4,10 @@ import { Item } from "../../../domain/models/Item";
 import { AppError } from "../../../domain/errors/AppError";
 import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode"; 
 import { ERROR_MESSAGES } from "../../../constants/ErrorMessage";
+import { IUpdateItemUseCase } from "./IUpdateItemUseCase";
 
 @injectable()
-export class UpdateItem {
+export class UpdateItemUseCase implements IUpdateItemUseCase {
   constructor(
     @inject("IItemRepository")
     private itemRepository: IItemRepository

@@ -13,6 +13,8 @@ import { ICustomerRepository } from "../../domain/repositories/ICustomerReposito
 import { MongoCustomerRepository } from "../database/repositories/MongoCostomerRepository";
 import { ISaleRepository } from "../../domain/repositories/ISaleRepository";
 import { MongoSaleRepository } from "../database/repositories/MongoSaleRepository";
+import { UpdateItemUseCase } from "../../application/use_cases/Item/UpdateItem";
+import { IUpdateItemUseCase } from "../../application/use_cases/Item/IUpdateItemUseCase";
 
 
 container.register<HashService>("IHashService", {
@@ -37,3 +39,6 @@ container.register<ICustomerRepository>("ICustomerRepository",{
 container.register<ISaleRepository>("ISaleRepository",{
   useClass:MongoSaleRepository
 })
+container.register<IUpdateItemUseCase>("IUpdateItemUseCase", {
+  useClass: UpdateItemUseCase,
+});

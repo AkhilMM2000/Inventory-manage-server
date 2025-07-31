@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { container, inject, singleton } from "tsyringe";
-import { UpdateItem } from "../../application/use_cases/Item/UpdateItem";
 import { HTTP_STATUS_CODES } from "../../constants/HttpStatuscode";
 import { ERROR_MESSAGES } from "../../constants/ErrorMessage";
 import { IAddItemUseCase } from "../../application/use_cases/Item/IAddItemUseCase";
@@ -8,6 +7,7 @@ import { IDeleteItemUseCase } from "../../application/use_cases/Item/IDeleteItem
 import { IGetAllItemsUseCase } from "../../application/use_cases/Item/IGetAllItemsUseCase";
 import { IGetItemByIdUseCase } from "../../application/use_cases/Item/IGetItemById";
 import { ISearchItemsUseCase } from "../../application/use_cases/Item/ISearchItemsUseCase";
+import { IUpdateItemUseCase } from "../../application/use_cases/Item/IUpdateItemUseCase";
 
 @singleton()
 export class ItemController {
@@ -20,8 +20,10 @@ export class ItemController {
     private getAllItemUseCase:IGetAllItemsUseCase,
     @inject("IGetItemByIdUseCase")
     private getItemByIdUseCase:IGetItemByIdUseCase,
-       @inject("ISearchItemsUseCase")
-    private searchItemsUseCase: ISearchItemsUseCase
+    @inject("ISearchItemsUseCase")
+    private searchItemsUseCase: ISearchItemsUseCase,
+    @inject("IUpdateItemUseCase")
+    private updateItemUseCase: IUpdateItemUseCase,
   ) {}
 
    async addItem(req: Request, res: Response, next: NextFunction) {
@@ -88,7 +90,7 @@ async searchItems(req: Request, res: Response, next: NextFunction) {
     next(err);
   }
 }
-static async updateItem(req: Request, res: Response, next: NextFunction) {
+ async updateItem(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
 
@@ -97,8 +99,7 @@ static async updateItem(req: Request, res: Response, next: NextFunction) {
       Object.entries(req.body).filter(([, value]) => value !== undefined)
     );
 
-    const updateItem = container.resolve(UpdateItem);
-    const item = await updateItem.execute(id, filteredUpdate);
+    const item = await this.updateItemUseCase.execute(id, filteredUpdate);
 
  res.status(HTTP_STATUS_CODES.OK).json({ item });
   } catch (err) {
