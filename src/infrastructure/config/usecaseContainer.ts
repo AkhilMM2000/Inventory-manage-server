@@ -6,6 +6,8 @@ import { IDeleteItemUseCase } from "../../application/use_cases/Item/IDeleteItem
 import { DeleteItemUseCase } from "../../application/use_cases/Item/DeleteItemUseCase";
 import { IGetAllItemsUseCase } from "../../application/use_cases/Item/IGetAllItemsUseCase";
 import { GetAllItemsUseCase } from "../../application/use_cases/Item/GetAllItemsUseCase";
+import { IGetItemByIdUseCase } from "../../application/use_cases/Item/IGetItemById";
+import { GetItemByIdUseCase } from "../../application/use_cases/Item/GetItemByIdUseCase";
 
 
 container.register<IAddItemUseCase>("IAddItemUseCase", {
@@ -18,4 +20,8 @@ useClass:DeleteItemUseCase
 
 container.register<IGetAllItemsUseCase>("IGetAllItemsUseCase", {
   useClass: GetAllItemsUseCase,
+});
+
+container.register<IGetItemByIdUseCase>("IGetItemByIdUseCase", {
+  useClass: GetItemByIdUseCase,
 });

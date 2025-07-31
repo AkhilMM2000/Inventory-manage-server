@@ -2,14 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import { container, inject, singleton } from "tsyringe";
 
 import { SearchItems } from "../../application/use_cases/Item/SearchItems"; 
-import { GetItemById } from "../../application/use_cases/Item/GetItemById";
 import { UpdateItem } from "../../application/use_cases/Item/UpdateItem";
-
 import { HTTP_STATUS_CODES } from "../../constants/HttpStatuscode";
 import { ERROR_MESSAGES } from "../../constants/ErrorMessage";
 import { IAddItemUseCase } from "../../application/use_cases/Item/IAddItemUseCase";
 import { IDeleteItemUseCase } from "../../application/use_cases/Item/IDeleteItemUseCase";
 import { IGetAllItemsUseCase } from "../../application/use_cases/Item/IGetAllItemsUseCase";
+import { IGetItemByIdUseCase } from "../../application/use_cases/Item/IGetItemById";
 
 @singleton()
 export class ItemController {
@@ -19,7 +18,9 @@ export class ItemController {
     @inject("IDeleteItemUseCase")
     private deleteItemUseCase:IDeleteItemUseCase,
     @inject("IGetAllItemsUseCase")
-    private getAllItemUseCase:IGetAllItemsUseCase 
+    private getAllItemUseCase:IGetAllItemsUseCase,
+    @inject("IGetItemByIdUseCase")
+    private getItemByIdUseCase:IGetItemByIdUseCase
   ) {}
 
    async addItem(req: Request, res: Response, next: NextFunction) {
@@ -77,13 +78,10 @@ static async searchItems(req: Request, res: Response, next: NextFunction) {
     next(err);
   }
 }
-static async getItemById(req: Request, res: Response, next: NextFunction) {
+ async getItemById(req: Request, res: Response, next: NextFunction) {
   try {
-    const { id } = req.params;
-
-    const getItemById = container.resolve(GetItemById);
-    const item = await getItemById.execute(id);
-
+    const { itemId } = req.params;
+    const item = await this.getItemByIdUseCase.execute(itemId)
     res.status(HTTP_STATUS_CODES.OK).json({ item });
   } catch (err) {
     next(err);
