@@ -4,7 +4,7 @@ import { IItemRepository } from "../../../domain/repositories/IItemRepository";
 import { AppError } from "../../../domain/errors/AppError";
 import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode";
 import { ERROR_MESSAGES } from "../../../constants/ErrorMessage";
-import { IDeleteItemUseCase } from "./IDeleteItemUsecase";
+import { IDeleteItemUseCase } from "./IDeleteItemUseCase";
 
 @injectable()
 export class DeleteItemUseCase implements IDeleteItemUseCase {

@@ -8,7 +8,7 @@ import { UpdateItem } from "../../application/use_cases/Item/UpdateItem";
 import { HTTP_STATUS_CODES } from "../../constants/HttpStatuscode";
 import { ERROR_MESSAGES } from "../../constants/ErrorMessage";
 import { IAddItemUseCase } from "../../application/use_cases/Item/IAddItemUseCase";
-import { IDeleteItemUseCase } from "../../application/use_cases/Item/IDeleteItemUsecase";
+import { IDeleteItemUseCase } from "../../application/use_cases/Item/IDeleteItemUseCase";
 @singleton()
 export class ItemController {
   constructor(
