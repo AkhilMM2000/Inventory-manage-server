@@ -1,20 +1,13 @@
 import { inject, injectable } from "tsyringe";
-
 import { IItemRepository } from "../../../domain/repositories/IItemRepository";
 import { Item } from "../../../domain/models/Item";
 import { AppError } from "../../../domain/errors/AppError";
 import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode";
 import { ERROR_MESSAGES } from "../../../constants/ErrorMessage";
-
-interface AddItemDTO {
-  name: string;
-  description?: string;
-  quantity: number;
-  price: number;
-}
+import { AddItemDTO, IAddItemUseCase } from "./IAddItemUseCase";
 
 @injectable()
-export class AddItem {
+export class AddItemUseCase implements IAddItemUseCase  {
   constructor(
     @inject("IItemRepository")
     private itemRepository: IItemRepository

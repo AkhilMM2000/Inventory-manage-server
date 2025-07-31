@@ -1,22 +1,28 @@
 import { Request, Response, NextFunction } from "express";
-import { container } from "tsyringe";
-
-import { AddItem } from "../../application/use_cases/Item/AddItem";
+import { container, inject, singleton } from "tsyringe";
 import { GetAllItems } from "../../application/use_cases/Item/GetAllItems";
 import { SearchItems } from "../../application/use_cases/Item/SearchItems"; 
 import { GetItemById } from "../../application/use_cases/Item/GetItemById";
 import { UpdateItem } from "../../application/use_cases/Item/UpdateItem";
-import { DeleteItem } from "../../application/use_cases/Item/DeleteItem";
+
 import { HTTP_STATUS_CODES } from "../../constants/HttpStatuscode";
 import { ERROR_MESSAGES } from "../../constants/ErrorMessage";
-
+import { IAddItemUseCase } from "../../application/use_cases/Item/IAddItemUseCase";
+import { IDeleteItemUseCase } from "../../application/use_cases/Item/IDeleteItemUsecase";
+@singleton()
 export class ItemController {
-  static async addItem(req: Request, res: Response, next: NextFunction) {
+  constructor(
+    @inject("IAddItemUseCase")
+    private addItemUseCase: IAddItemUseCase,
+    @inject("IDeleteItemUseCase")
+    private deleteItemUseCase:IDeleteItemUseCase
+  ) {}
+
+   async addItem(req: Request, res: Response, next: NextFunction) {
     try {
       const { name, description, quantity, price } = req.body;
 
-      const addItem = container.resolve(AddItem);
-      const createdItem = await addItem.execute({
+      const createdItem = await this.addItemUseCase.execute({
         name,
         description,
         quantity,
@@ -28,6 +34,17 @@ export class ItemController {
       next(error);
     }
   }
+  
+ async deleteItem(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { itemId } = req.params;
+     this.deleteItemUseCase.execute(itemId )
+
+ res.status(HTTP_STATUS_CODES.OK).json({ message:ERROR_MESSAGES.ITEM_DELETED});
+  } catch (err) {
+    next(err);
+  }
+}
   
 static async getAllItems(req: Request, res: Response, next: NextFunction) {
   try {
@@ -86,17 +103,5 @@ static async updateItem(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-static async deleteItem(req: Request, res: Response, next: NextFunction) {
-  try {
-    const { id } = req.params;
-
-    const deleteItem = container.resolve(DeleteItem);
-    await deleteItem.execute(id);
-
- res.status(HTTP_STATUS_CODES.OK).json({ message:ERROR_MESSAGES.ITEM_DELETED});
-  } catch (err) {
-    next(err);
-  }
-}
 }
 

@@ -1,4 +1,5 @@
 import { container } from "tsyringe";
+import "./usecaseContainer";
 
 import { HashService } from "../../application/services/HashService"; 
 import { BcryptHashService } from "../services/BcryptHashService";

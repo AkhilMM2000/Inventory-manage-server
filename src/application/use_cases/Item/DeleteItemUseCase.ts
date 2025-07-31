@@ -4,9 +4,10 @@ import { IItemRepository } from "../../../domain/repositories/IItemRepository";
 import { AppError } from "../../../domain/errors/AppError";
 import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode";
 import { ERROR_MESSAGES } from "../../../constants/ErrorMessage";
+import { IDeleteItemUseCase } from "./IDeleteItemUsecase";
 
 @injectable()
-export class DeleteItem {
+export class DeleteItemUseCase implements IDeleteItemUseCase {
   constructor(
     @inject("IItemRepository")
     private itemRepository: IItemRepository
