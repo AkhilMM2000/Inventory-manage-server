@@ -6,13 +6,13 @@ import { AppError } from "../../../domain/errors/AppError";
 import { User } from "../../../domain/models/User";
 import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode";
 import { ERROR_MESSAGES } from "../../../constants/ErrorMessage";
+import { ILoginUserUseCase } from "./ILoginUserUseCase";
 interface LoginDTO {
   email: string;
   password: string;
 }
-
 @injectable()
-export class LoginUser {
+export class LoginUserUseCase implements ILoginUserUseCase {
   constructor(
     @inject("IUserRepository") private userRepository: UserRepository,
     @inject("IHashService") private hashService: HashService,

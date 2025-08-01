@@ -1,32 +1,36 @@
 import { Request, Response, NextFunction } from "express";
-import { container } from "tsyringe";
-
-import { RegisterUser } from "../../application/use_cases/Auth/RegisterUser";
-import { RefreshAccessToken } from "../../application/use_cases/Auth/RefreshAccessToken";
-import { LoginUser } from "../../application/use_cases/Auth/LoginUser";
+import {inject, singleton } from "tsyringe";
 import { HTTP_STATUS_CODES } from "../../constants/HttpStatuscode";
 import { ERROR_MESSAGES } from "../../constants/ErrorMessage";
 import { AuthenticatedRequest } from "../../middleware/AuthMiddleware";
-
+import { ILoginUserUseCase } from "../../application/use_cases/Auth/ILoginUserUseCase";
+import { IUserAuthUseCase } from "../../application/use_cases/Auth/IRegisterAuthUseCase";
+import { IRefreshAccessTokenUseCase } from "../../application/use_cases/Auth/IRefreshAccessTokenUseCase";
+@singleton()
 export class UserController {
-  static async register(req: Request, res: Response, next: NextFunction) {
+    constructor(
+    @inject("ILoginUserUseCase")
+   private loginUserUseCase: ILoginUserUseCase,
+   @inject("IUserAuthUseCase")
+   private registerUseCase:IUserAuthUseCase,
+   @inject("IRefreshAccessTokenUseCase")
+   private refreshTokenUseCase:IRefreshAccessTokenUseCase
+  ) {}
+  async register(req: Request, res: Response, next: NextFunction) {
     try {
       const { fullName, email, password } = req.body;
     
-      const registerUser = container.resolve(RegisterUser);
-      const user = await registerUser.execute({ fullName, email, password });
+      const user = await this.registerUseCase.execute({ fullName, email, password });
 
-      res.status(201).json({ user });
+      res.status(HTTP_STATUS_CODES.CREATED).json({ user });
     } catch (err) {
       next(err);
     }
   }
-  static async login(req: Request, res: Response, next: NextFunction) {
+ async login(req: Request, res: Response, next: NextFunction) {
   try {
     const { email, password } = req.body;
-    const loginUser = container.resolve(LoginUser);
-    const { accessToken, refreshToken, user } = await loginUser.execute({ email, password });
-
+    const { accessToken, refreshToken, user } = await this.loginUserUseCase.execute({ email, password });
     // ✅ Set refreshToken in HTTP-only cookie
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -35,7 +39,7 @@ export class UserController {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(200).json({
+    res.status(HTTP_STATUS_CODES.OK).json({
       accessToken,
       user,
     });
@@ -44,19 +48,18 @@ export class UserController {
   }
 }
 
-static async refreshToken(req: Request, res: Response, next: NextFunction) {
+ async refreshToken(req: Request, res: Response, next: NextFunction) {
   try {
     const refreshToken = req.cookies["refreshToken"];
 
-    const refreshUseCase = container.resolve(RefreshAccessToken);
-    const accessToken = refreshUseCase.execute(refreshToken);
+    const accessToken =await this.refreshTokenUseCase.execute(refreshToken);
 
      res.status(HTTP_STATUS_CODES.OK).json({ accessToken });
   } catch (err) {
     next(err);
   }
 }
-static async getMe(req:AuthenticatedRequest, res: Response, next: NextFunction) {
+ async getMe(req:AuthenticatedRequest, res: Response, next: NextFunction) {
   try {
     res.status(HTTP_STATUS_CODES.OK).json({ user: req.user });
   } catch (err) {
@@ -64,7 +67,7 @@ static async getMe(req:AuthenticatedRequest, res: Response, next: NextFunction) 
   }
 }
 
-static async logout(req: Request, res: Response, next: NextFunction) {
+ async logout(req: Request, res: Response, next: NextFunction) {
   try {
 
     res.clearCookie("refreshToken", {
@@ -75,6 +78,7 @@ static async logout(req: Request, res: Response, next: NextFunction) {
 
     });
 
+  
      res.status(HTTP_STATUS_CODES.OK).json({ message: ERROR_MESSAGES.LOGOUT_SUCCESS });
   } catch (err) {
     next(err);

@@ -1,13 +1,13 @@
 import { inject, injectable } from "tsyringe";
-
 import { AuthService } from "../../services/AuthServices"; 
 import { AppError } from "../../../domain/errors/AppError";
 import { TokenPayload } from "../../../shared/AuthTypes"; 
 import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode";
 import { ERROR_MESSAGES } from "../../../constants/ErrorMessage";
+import { IRefreshAccessTokenUseCase } from "./IRefreshAccessTokenUseCase";
 
 @injectable()
-export class RefreshAccessToken {
+export class RefreshAccessToken implements IRefreshAccessTokenUseCase {
   constructor(
     @inject("IAuthService") private authService: AuthService
   ) {}

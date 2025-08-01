@@ -21,7 +21,7 @@ export class AuthMiddleware {
   protectRoute = () => {
     return async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
       const authHeader = req.headers.authorization;
-console.log(req.headers.authorization,'reach here')
+
       if (!authHeader || !authHeader.startsWith("Bearer")) {
          throw new AppError(ERROR_MESSAGES.NO_TOKEN_PROVIDED, HTTP_STATUS_CODES.UNAUTHORIZED);
       }

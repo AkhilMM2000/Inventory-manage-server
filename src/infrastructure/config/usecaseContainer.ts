@@ -22,6 +22,12 @@ import { IUpdateCustomerUseCase } from "../../application/use_cases/Customer/IUp
 import { UpdateCustomerUseCase } from "../../application/use_cases/Customer/UpdateCostomerUseCase";
 import { IDeleteCustomerUseCase } from "../../application/use_cases/Customer/IDeleteCustomerUseCase";
 import { DeleteCustomerUseCase } from "../../application/use_cases/Customer/DeleteCustomerUseCase";
+import { ILoginUserUseCase } from "../../application/use_cases/Auth/ILoginUserUseCase";
+import { LoginUserUseCase } from "../../application/use_cases/Auth/LoginUserUseCase";
+import { IUserAuthUseCase } from "../../application/use_cases/Auth/IRegisterAuthUseCase";
+import { RegisterUserUseCase } from "../../application/use_cases/Auth/RegisterAuthUser";
+import { IRefreshAccessTokenUseCase } from "../../application/use_cases/Auth/IRefreshAccessTokenUseCase";
+import { RefreshAccessToken } from "../../application/use_cases/Auth/RefreshAccessTokenUseCase";
 
 
 container.register<IAddItemUseCase>("IAddItemUseCase", {
@@ -62,4 +68,14 @@ container.register<IUpdateCustomerUseCase>("IUpdateCustomerUseCase", {
 });
 container.register<IDeleteCustomerUseCase>("IDeleteCustomerUseCase",{
   useClass:DeleteCustomerUseCase
+});
+container.register<ILoginUserUseCase>("ILoginUserUseCase", {
+  useClass: LoginUserUseCase,
+});
+container.register<IUserAuthUseCase>("IUserAuthUseCase",{
+  useClass:RegisterUserUseCase
+})
+
+container.register<IRefreshAccessTokenUseCase>('IRefreshAccessTokenUseCase',{
+  useClass:RefreshAccessToken
 })

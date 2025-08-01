@@ -1,9 +1,7 @@
 import express from "express";
-import { CustomerController } from "../controllers/CustomerController";
 import { AuthMiddleware } from "../../middleware/AuthMiddleware";
 import { container } from "tsyringe";
 import { customerController } from "../../infrastructure/config/controllers";
-
 const router = express.Router();
 const authMiddleware = container.resolve(AuthMiddleware);
 // 🔐 Protected route to add customer

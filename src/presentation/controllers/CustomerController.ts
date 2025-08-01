@@ -72,6 +72,7 @@ res.status(HTTP_STATUS_CODES.OK).json({ message: "Customer deleted successfully"
   async getCustomerLedger(req: Request, res: Response, next: NextFunction) {
     try {
       const { customerId } = req.params;
+      console.log(customerId,'reach here customer ledger controller')
       const ledger = await this.getCustomerLedgerUseCase.execute(customerId);
       res.status(HTTP_STATUS_CODES.OK).json(ledger);
     } catch (error) {

@@ -1,30 +1,30 @@
 import { inject, injectable } from "tsyringe";
-
 import { UserRepository } from "../../../domain/repositories/UserRepository"; 
 import { HashService } from "../../services/HashService"; 
 import { User } from "../../../domain/models/User";
 import { AppError } from "../../../domain/errors/AppError";
-
+import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode";
+import { ERROR_MESSAGES } from "../../../constants/ErrorMessage";
+import { IUserAuthUseCase } from "./IRegisterAuthUseCase";
 interface RegisterUserDTO {
   fullName: string;
   email: string;
   password: string;
 }
-
 @injectable()
-export class RegisterUser {
+export class RegisterUserUseCase implements IUserAuthUseCase {
   constructor(
     @inject("IUserRepository") private userRepository: UserRepository,
     @inject("IHashService") private hashService: HashService
   ) {}
-
+  
   async execute(data: RegisterUserDTO): Promise<Omit<User, "password">> {
     const { fullName, email, password } = data;
 
     // Check if user already exists
     const existing = await this.userRepository.findByEmail(email);
     if (existing) {
-      throw new AppError("User already exists with this email", 400);
+      throw new AppError(ERROR_MESSAGES.USER_ALREADY_EXISTS, HTTP_STATUS_CODES.BAD_REQUEST);
     }
 
     // Hash the password

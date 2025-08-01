@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { container, inject, singleton } from "tsyringe";
+import {inject, singleton } from "tsyringe";
 import { HTTP_STATUS_CODES } from "../../constants/HttpStatuscode";
 import { ERROR_MESSAGES } from "../../constants/ErrorMessage";
 import { IAddItemUseCase } from "../../application/use_cases/Item/IAddItemUseCase";

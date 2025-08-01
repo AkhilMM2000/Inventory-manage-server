@@ -32,7 +32,7 @@ export class SaleController {
     
       const result = await this.getAllSaleUseCase.execute(page, limit, search, paymentType);
 
-      res.status(200).json(result);
+      res.status(HTTP_STATUS_CODES.OK).json(result);
     } catch (error) {
       next(error);
     }
