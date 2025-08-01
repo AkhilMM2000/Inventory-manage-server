@@ -12,6 +12,8 @@ import { ISearchItemsUseCase } from "../../application/use_cases/Item/ISearchIte
 import { SearchItemsUseCase } from "../../application/use_cases/Item/SearchItemsUseCase";
 import { CreateSale } from "../../application/use_cases/sales/CreateSale";
 import { ICreateSaleUseCase } from "../../application/use_cases/sales/ISaleUseCase";
+import { IGetAllSales } from "../../application/use_cases/sales/IGetAllSaleUseCase";
+import { GetAllSales } from "../../application/use_cases/sales/GetAllSaleUseCase";
 
 
 container.register<IAddItemUseCase>("IAddItemUseCase", {
@@ -35,4 +37,8 @@ container.register<IGetItemByIdUseCase>("IGetItemByIdUseCase", {
 
 container.register<ICreateSaleUseCase>("ICreateSaleUseCase", {
   useClass: CreateSale,
+});
+
+container.register<IGetAllSales>("IGetAllSales", {
+  useClass: GetAllSales,
 });

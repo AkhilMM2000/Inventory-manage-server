@@ -5,6 +5,7 @@ import { HTTP_STATUS_CODES } from "../../constants/HttpStatuscode";
 import { GetAllCustomers } from "../../application/use_cases/Customer/GetAllCustomer";
 import { UpdateCustomer } from "../../application/use_cases/Customer/UpdateCostomer";
 import { DeleteCustomer } from "../../application/use_cases/Customer/DeleteCustomer";
+import { GetCustomerLedger } from "../../application/use_cases/Customer/GetCustomerLedger";
 
 export class CustomerController{
   static async addCustomer(req: Request, res: Response, next: NextFunction) {
@@ -56,4 +57,18 @@ res.status(200).json({ message: "Customer deleted successfully" });
     next(error);
   }
 }
+
+
+ static async getCustomerLedger(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { customerId } = req.params;
+
+      const getCustomerLedger = container.resolve(GetCustomerLedger);
+      const ledger = await getCustomerLedger.execute(customerId);
+
+       res.status(200).json(ledger);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
