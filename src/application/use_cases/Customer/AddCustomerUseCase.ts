@@ -4,6 +4,7 @@ import { Customer } from "../../../domain/models/Customer";
 import { AppError } from "../../../domain/errors/AppError"; 
 import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode"; 
 import { ERROR_MESSAGES } from "../../../constants/ErrorMessage"; 
+import { IAddCustomerUseCase } from "./IAddCustomerUseCase";
 
 interface AddCustomerDTO {
   name: string;
@@ -12,7 +13,7 @@ interface AddCustomerDTO {
 }
 
 @injectable()
-export class AddCustomer {
+export class AddCustomer implements IAddCustomerUseCase  {
   constructor(
     @inject("ICustomerRepository")
     private customerRepository: ICustomerRepository
@@ -37,3 +38,4 @@ export class AddCustomer {
     return await this.customerRepository.create(newCustomer);
   }
 }
+

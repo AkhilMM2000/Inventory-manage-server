@@ -2,15 +2,15 @@ import express from "express";
 import { CustomerController } from "../controllers/CustomerController";
 import { AuthMiddleware } from "../../middleware/AuthMiddleware";
 import { container } from "tsyringe";
-import { SaleController } from "../controllers/SaleController";
+import { customerController } from "../../infrastructure/config/controllers";
 
 const router = express.Router();
 const authMiddleware = container.resolve(AuthMiddleware);
 // 🔐 Protected route to add customer
 router.
-post("/", authMiddleware.protectRoute(), CustomerController.addCustomer)
-.get("/", authMiddleware.protectRoute(), CustomerController.getAllCustomers)   
-.put('/:id',authMiddleware.protectRoute(),CustomerController.updateCustomer)
-.delete("/:id",authMiddleware.protectRoute(), CustomerController.deleteCustomer)
-.get("/customer/:customerId",authMiddleware.protectRoute(),CustomerController.getCustomerLedger);
+post("/", authMiddleware.protectRoute(), customerController.addCustomer.bind(customerController))
+.get("/", authMiddleware.protectRoute(), customerController.getAllCustomers.bind(customerController))   
+.put('/:customerId',authMiddleware.protectRoute(),customerController.updateCustomer.bind(customerController))
+.delete("/:customerId",authMiddleware.protectRoute(), customerController.deleteCustomer.bind(customerController))
+.get("/customer/:customerId",authMiddleware.protectRoute(),customerController.getCustomerLedger.bind(customerController));
 export default router;

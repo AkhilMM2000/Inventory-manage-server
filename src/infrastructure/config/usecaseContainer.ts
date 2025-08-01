@@ -14,6 +14,14 @@ import { CreateSale } from "../../application/use_cases/sales/CreateSale";
 import { ICreateSaleUseCase } from "../../application/use_cases/sales/ISaleUseCase";
 import { IGetAllSales } from "../../application/use_cases/sales/IGetAllSaleUseCase";
 import { GetAllSales } from "../../application/use_cases/sales/GetAllSaleUseCase";
+import { AddCustomer } from "../../application/use_cases/Customer/AddCustomerUseCase";
+import { IAddCustomerUseCase } from "../../application/use_cases/Customer/IAddCustomerUseCase";
+import { GetAllCustomers } from "../../application/use_cases/Customer/GetAllCustomerUseCase";
+import { IGetAllCustomers } from "../../application/use_cases/Customer/IGetAllCustomerUseCase";
+import { IUpdateCustomerUseCase } from "../../application/use_cases/Customer/IUpdateCustomerUseCase";
+import { UpdateCustomerUseCase } from "../../application/use_cases/Customer/UpdateCostomerUseCase";
+import { IDeleteCustomerUseCase } from "../../application/use_cases/Customer/IDeleteCustomerUseCase";
+import { DeleteCustomerUseCase } from "../../application/use_cases/Customer/DeleteCustomerUseCase";
 
 
 container.register<IAddItemUseCase>("IAddItemUseCase", {
@@ -42,3 +50,16 @@ container.register<ICreateSaleUseCase>("ICreateSaleUseCase", {
 container.register<IGetAllSales>("IGetAllSales", {
   useClass: GetAllSales,
 });
+container.register<IAddCustomerUseCase>("IAddCustomerUseCase", {
+  useClass: AddCustomer,
+});
+
+container.register<IGetAllCustomers>("IGetAllCustomerUseCase", {
+  useClass: GetAllCustomers,
+});
+container.register<IUpdateCustomerUseCase>("IUpdateCustomerUseCase", {
+  useClass: UpdateCustomerUseCase,
+});
+container.register<IDeleteCustomerUseCase>("IDeleteCustomerUseCase",{
+  useClass:DeleteCustomerUseCase
+})

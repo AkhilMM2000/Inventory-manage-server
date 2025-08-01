@@ -1,72 +1,79 @@
 import { Request, Response, NextFunction } from "express";
-import { container } from "tsyringe";
-import { AddCustomer } from "../../application/use_cases/Customer/AddCustomer";
+import { inject, singleton } from "tsyringe";
 import { HTTP_STATUS_CODES } from "../../constants/HttpStatuscode";
-import { GetAllCustomers } from "../../application/use_cases/Customer/GetAllCustomer";
-import { UpdateCustomer } from "../../application/use_cases/Customer/UpdateCostomer";
-import { DeleteCustomer } from "../../application/use_cases/Customer/DeleteCustomer";
-import { GetCustomerLedger } from "../../application/use_cases/Customer/GetCustomerLedger";
-
+import { IAddCustomerUseCase } from "../../application/use_cases/Customer/IAddCustomerUseCase";
+import { IGetAllCustomers } from "../../application/use_cases/Customer/IGetAllCustomerUseCase";
+import { IUpdateCustomerUseCase } from "../../application/use_cases/Customer/IUpdateCustomerUseCase";
+import { IDeleteCustomerUseCase } from "../../application/use_cases/Customer/IDeleteCustomerUseCase";
+import { ICustomerLedgerUseCase } from "../../application/use_cases/Customer/IGetCustomerLedgerUseCase";
+@singleton()
 export class CustomerController{
-  static async addCustomer(req: Request, res: Response, next: NextFunction) {
+   constructor(
+    @inject("IAddCustomerUseCase")
+    private addCustomerUseCase: IAddCustomerUseCase,
+    @inject("IGetAllCustomerUseCase")
+    private getAllCustomersUseCase: IGetAllCustomers,
+    @inject("IUpdateCustomerUseCase")
+    private updateAllCustomerUseCase:IUpdateCustomerUseCase,
+    @inject("IDeleteCustomerUseCase")
+    private deleteCustomerUseCase:IDeleteCustomerUseCase,
+    @inject("ICustomerLedgerUseCase")
+    private getCustomerLedgerUseCase:ICustomerLedgerUseCase
+  ) {}
+  async addCustomer(req: Request, res: Response, next: NextFunction) {
     try {
-      const addCustomer = container.resolve(AddCustomer);
-      const customer = await addCustomer.execute(req.body);
+    
+      const customer = await this.addCustomerUseCase.execute(req.body);
      res.status(HTTP_STATUS_CODES.CREATED).json({ customer });
     } catch (error) {
       next(error);
     }
   }
 
- static async getAllCustomers(req: Request, res: Response, next: NextFunction) {
+ async getAllCustomers(req: Request, res: Response, next: NextFunction) {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
       const search = (req.query.search as string) || "";
 
-      const getAllCustomers = container.resolve(GetAllCustomers);
-      const result = await getAllCustomers.execute(page, limit, search);
+     
+      const result = await this.getAllCustomersUseCase.execute(page, limit, search);
 
-      res.status(200).json(result);
+      res.status(HTTP_STATUS_CODES.OK).json(result);
     } catch (error) {
       next(error);
     }
   }
-static async updateCustomer(req: Request, res: Response, next: NextFunction) {
+ async updateCustomer(req: Request, res: Response, next: NextFunction) {
   try {
-    const { id } = req.params;
+    const { customerId } = req.params;
     const filteredUpdate = Object.fromEntries(
       Object.entries(req.body).filter(([, value]) => value !== undefined)
     );
 
-    const updateCustomer = container.resolve(UpdateCustomer);
 
-    const updated = await updateCustomer.execute(id,filteredUpdate);
-    res.status(200).json({ customer: updated });
+    const updated = await this.updateAllCustomerUseCase.execute(customerId,filteredUpdate);
+    res.status(HTTP_STATUS_CODES.OK).json({ customer: updated });
   } catch (error) {
     next(error);
   }
 }
-static async deleteCustomer(req: Request, res: Response, next: NextFunction) {
+ async deleteCustomer(req: Request, res: Response, next: NextFunction) {
   try {
-    const { id } = req.params;
-    const deleteCustomer = container.resolve(DeleteCustomer);
-    await deleteCustomer.execute(id);
-res.status(200).json({ message: "Customer deleted successfully" });
+    const { customerId } = req.params;
+   
+    await this.deleteCustomerUseCase.execute(customerId);
+res.status(HTTP_STATUS_CODES.OK).json({ message: "Customer deleted successfully" });
   } catch (error) {
     next(error);
   }
 }
 
-
- static async getCustomerLedger(req: Request, res: Response, next: NextFunction) {
+  async getCustomerLedger(req: Request, res: Response, next: NextFunction) {
     try {
       const { customerId } = req.params;
-
-      const getCustomerLedger = container.resolve(GetCustomerLedger);
-      const ledger = await getCustomerLedger.execute(customerId);
-
-       res.status(200).json(ledger);
+      const ledger = await this.getCustomerLedgerUseCase.execute(customerId);
+      res.status(HTTP_STATUS_CODES.OK).json(ledger);
     } catch (error) {
       next(error);
     }
