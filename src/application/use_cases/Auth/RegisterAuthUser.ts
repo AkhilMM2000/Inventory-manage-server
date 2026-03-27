@@ -2,9 +2,7 @@ import { inject, injectable } from "tsyringe";
 import { UserRepository } from "../../../domain/repositories/UserRepository"; 
 import { HashService } from "../../services/HashService"; 
 import { User } from "../../../domain/models/User";
-import { AppError } from "../../../domain/errors/AppError";
-import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode";
-import { ERROR_MESSAGES } from "../../../constants/ErrorMessage";
+import { UserAlreadyExistsError } from "../../../domain/errors/DomainExceptions";
 import { IUserAuthUseCase } from "./IRegisterAuthUseCase";
 interface RegisterUserDTO {
   fullName: string;
@@ -18,13 +16,13 @@ export class RegisterUserUseCase implements IUserAuthUseCase {
     @inject("IHashService") private hashService: HashService
   ) {}
   
-  async execute(data: RegisterUserDTO): Promise<Omit<User, "password">> {
+  async execute(data: RegisterUserDTO): Promise<User> {
     const { fullName, email, password } = data;
 
     // Check if user already exists
     const existing = await this.userRepository.findByEmail(email);
     if (existing) {
-      throw new AppError(ERROR_MESSAGES.USER_ALREADY_EXISTS, HTTP_STATUS_CODES.BAD_REQUEST);
+      throw new UserAlreadyExistsError();
     }
 
     // Hash the password
@@ -39,10 +37,6 @@ export class RegisterUserUseCase implements IUserAuthUseCase {
 
     const createdUser = await this.userRepository.create(newUser);
 
-    // Return user info without password
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _password, ...safeUser } = createdUser;
-    
-    return safeUser;
+    return createdUser;
   }
 }

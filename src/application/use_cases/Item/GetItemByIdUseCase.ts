@@ -1,9 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { IItemRepository } from "../../../domain/repositories/IItemRepository";
 import { Item } from "../../../domain/models/Item";
-import { AppError } from "../../../domain/errors/AppError";
-import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode";
-import { ERROR_MESSAGES } from "../../../constants/ErrorMessage";
+import { EntityNotFoundError } from "../../../domain/errors/DomainExceptions";
 import { IGetItemByIdUseCase } from "./IGetItemById";
 
 @injectable()
@@ -17,7 +15,7 @@ export class GetItemByIdUseCase implements IGetItemByIdUseCase {
     const item = await this.itemRepository.findById(id);
 
     if (!item) {
-      throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, HTTP_STATUS_CODES.NOT_FOUND);
+      throw new EntityNotFoundError("Item");
     }
     return item;
   }

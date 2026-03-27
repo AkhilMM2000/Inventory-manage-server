@@ -7,5 +7,5 @@ export interface RegisterUserDTO {
 }
 
 export interface IUserAuthUseCase {
-  execute(data: RegisterUserDTO): Promise<Omit<User, "password">>;
+  execute(data: RegisterUserDTO): Promise<User>;
 }

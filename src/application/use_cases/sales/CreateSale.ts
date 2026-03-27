@@ -3,9 +3,7 @@ import { inject, injectable } from "tsyringe";
 import { ISaleRepository } from "../../../domain/repositories/ISaleRepository"; 
 import { IItemRepository } from "../../../domain/repositories/IItemRepository"; 
 import { Sale,SaleItem } from "../../../domain/models/Sales"; 
-import { AppError } from "../../../domain/errors/AppError";
-import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode";
-import { ERROR_MESSAGES } from "../../../constants/ErrorMessage";
+import { EntityNotFoundError, InsufficientStockError } from "../../../domain/errors/DomainExceptions";
 import { ICreateSaleUseCase } from "./ISaleUseCase";
 
 interface CreateSaleDTO {
@@ -28,12 +26,6 @@ export class  CreateSale implements ICreateSaleUseCase{
   async execute(data: CreateSaleDTO): Promise<Sale> {
     const { customerId, customerName, paymentType, items } = data;
 
-    if (!customerId || !customerName || !paymentType || !items || items.length === 0) {
-      throw new AppError(
-        ERROR_MESSAGES.REQUIRED_FIELDS_MISSING,
-        HTTP_STATUS_CODES.BAD_REQUEST
-      );
-    }
 
     let totalAmount = 0;
 
@@ -41,17 +33,11 @@ export class  CreateSale implements ICreateSaleUseCase{
       const found = await this.itemRepository.findById(item.itemId);
 
       if (!found) {
-        throw new AppError(
-          `Item with ID ${item.itemId} not found`,
-          HTTP_STATUS_CODES.NOT_FOUND
-        );
+        throw new EntityNotFoundError(`Item with ID ${item.itemId}`);
       }
 
       if (found.quantity < item.quantity) {
-        throw new AppError(
-          `Only ${found.quantity} units of "${found.name}" available`,
-          HTTP_STATUS_CODES.BAD_REQUEST
-        );
+        throw new InsufficientStockError(found.name, found.quantity);
       }
 
       totalAmount += item.quantity * item.unitPrice;

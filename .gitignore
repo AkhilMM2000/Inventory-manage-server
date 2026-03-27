@@ -34,3 +34,10 @@ coverage/
 # Lint & Prettier cache
 .eslintcache
 .prettiercache
+
+# AI / Editor / Temp
+.agents
+.augment
+skills-lock.json
+tsc-output*.txt
+,

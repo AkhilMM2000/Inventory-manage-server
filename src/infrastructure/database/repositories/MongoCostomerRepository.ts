@@ -25,44 +25,48 @@ export class MongoCustomerRepository   extends BaseRepository<Customer> implemen
   }
 
   
-
   async getAllCustomers(page: number, limit: number, search = "") {
     try {
-     const regex = new RegExp(search, "i");
-         const skip = (page - 1) * limit;
-     
-         const results = await this.model.aggregate([
-           {
-             $match: {
-               $or: [
-                 { name: { $regex: regex } },
-                 { address: { $regex: regex } },
-               ],
-             },
-           },
-           {
-             $facet: {
-               data: [
-                 { $skip: skip },
-                 { $limit: limit }
-               ],
-               totalCount: [
-                 { $count: "count" }
-               ]
-             }
-           }
-         ]);
-     
-        
-         const items = results[0]?.data || [];
-         const total = results[0]?.totalCount[0]?.count || 0;
-     
-         return {
-           data: items.map(this.map),
-           total,
-           page,
-           limit,
-         };
+      const regex = new RegExp(search, "i");
+      const skip = (page - 1) * limit;
+
+      const results = await this.model.aggregate([
+        {
+          $match: {
+            $or: [
+              { name: { $regex: regex } },
+              { "address.line1": { $regex: regex } },
+              { "address.line2": { $regex: regex } },
+              { "address.city": { $regex: regex } },
+              { "address.district": { $regex: regex } },
+              { "address.state": { $regex: regex } },
+              { "address.postalCode": { $regex: regex } },
+              { "address.country": { $regex: regex } }
+            ],
+          },
+        },
+        {
+          $facet: {
+            data: [
+              { $skip: skip },
+              { $limit: limit }
+            ],
+            totalCount: [
+              { $count: "count" }
+            ]
+          }
+        }
+      ]);
+
+      const items = results[0]?.data || [];
+      const total = results[0]?.totalCount[0]?.count || 0;
+
+      return {
+        data: items.map(this.map),
+        total,
+        page,
+        limit,
+      };
     } catch (error) {
       throw new AppError(
         error instanceof Error ? error.message : ERROR_MESSAGES.UNEXPECTED_ERROR,
@@ -70,5 +74,6 @@ export class MongoCustomerRepository   extends BaseRepository<Customer> implemen
       );
     }
   }
+
 
 }

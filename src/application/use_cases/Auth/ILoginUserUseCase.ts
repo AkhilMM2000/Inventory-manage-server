@@ -7,6 +7,6 @@ export interface ILoginUserUseCase {
   }): Promise<{
     accessToken: string;
     refreshToken: string;
-    user: Omit<User, "password">;
+    user: User;
   }>;
 }

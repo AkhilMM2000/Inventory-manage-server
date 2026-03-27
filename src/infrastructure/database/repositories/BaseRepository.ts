@@ -1,7 +1,7 @@
 export abstract class BaseRepository<T> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected abstract model: any;
-   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   protected abstract map(doc: any): T;
 
   async create(data: Partial<T>): Promise<T> {

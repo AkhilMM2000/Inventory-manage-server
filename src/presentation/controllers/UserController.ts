@@ -6,6 +6,8 @@ import { AuthenticatedRequest } from "../../middleware/AuthMiddleware";
 import { ILoginUserUseCase } from "../../application/use_cases/Auth/ILoginUserUseCase";
 import { IUserAuthUseCase } from "../../application/use_cases/Auth/IRegisterAuthUseCase";
 import { IRefreshAccessTokenUseCase } from "../../application/use_cases/Auth/IRefreshAccessTokenUseCase";
+import { registerSchema, loginSchema } from "../validators/UserValidator";
+import { UserMapper } from "../mappers/UserMapper";
 @singleton()
 export class UserController {
     constructor(
@@ -16,21 +18,21 @@ export class UserController {
    @inject("IRefreshAccessTokenUseCase")
    private refreshTokenUseCase:IRefreshAccessTokenUseCase
   ) {}
-  async register(req: Request, res: Response, next: NextFunction) {
+  async register(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { fullName, email, password } = req.body;
+      const validData = registerSchema.parse({ body: req.body });
     
-      const user = await this.registerUseCase.execute({ fullName, email, password });
+      const user = await this.registerUseCase.execute(validData.body);
 
-      res.status(HTTP_STATUS_CODES.CREATED).json({ user });
+      res.status(HTTP_STATUS_CODES.CREATED).json({ user: UserMapper.toResponse(user) });
     } catch (err) {
       next(err);
     }
   }
- async login(req: Request, res: Response, next: NextFunction) {
+ async login(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const { email, password } = req.body;
-    const { accessToken, refreshToken, user } = await this.loginUserUseCase.execute({ email, password });
+    const validData = loginSchema.parse({ body: req.body });
+    const { accessToken, refreshToken, user } = await this.loginUserUseCase.execute(validData.body);
     // ✅ Set refreshToken in HTTP-only cookie
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -41,7 +43,7 @@ export class UserController {
 
     res.status(HTTP_STATUS_CODES.OK).json({
       accessToken,
-      user,
+      user: UserMapper.toResponse(user),
     });
   } catch (err) {
     next(err);
@@ -61,7 +63,10 @@ export class UserController {
 }
  async getMe(req:AuthenticatedRequest, res: Response, next: NextFunction) {
   try {
-    res.status(HTTP_STATUS_CODES.OK).json({ user: req.user });
+    if (!req.user) {
+        throw new Error("User required");
+    }
+    res.status(HTTP_STATUS_CODES.OK).json({ user: UserMapper.toResponse(req.user as any) });
   } catch (err) {
     next(err);
   }

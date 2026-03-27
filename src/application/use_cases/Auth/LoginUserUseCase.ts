@@ -2,10 +2,8 @@ import { inject, injectable } from "tsyringe";
 import { UserRepository } from "../../../domain/repositories/UserRepository"; 
 import { HashService } from "../../services/HashService"; 
 import { AuthService } from "../../services/AuthServices"; 
-import { AppError } from "../../../domain/errors/AppError";
+import { InvalidCredentialsError } from "../../../domain/errors/DomainExceptions";
 import { User } from "../../../domain/models/User";
-import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode";
-import { ERROR_MESSAGES } from "../../../constants/ErrorMessage";
 import { ILoginUserUseCase } from "./ILoginUserUseCase";
 interface LoginDTO {
   email: string;
@@ -22,31 +20,28 @@ export class LoginUserUseCase implements ILoginUserUseCase {
   async execute(data: LoginDTO): Promise<{
     accessToken: string;
     refreshToken: string;
-    user: Omit<User, "password">;
+    user: User;
   }> {
     const { email, password } = data;
 
     const user = await this.userRepository.findByEmail(email);
     if (!user) {
-      throw new AppError(ERROR_MESSAGES.INVALID_CREDENTIALS, HTTP_STATUS_CODES.UNAUTHORIZED);
+      throw new InvalidCredentialsError();
     }
 
     const isMatch = await this.hashService.compare(password, user.password);
     if (!isMatch) {
-      throw new AppError("Invalid email or password", 401);
+      throw new InvalidCredentialsError();
     }
 
     const payload = { userId: user.id!, email: user.email,name:user.fullName };
     const accessToken = this.authService.generateAccessToken(payload);
     const refreshToken = this.authService.generateRefreshToken(payload);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _password, ...safeUser } = user;
-
     return {
       accessToken,
       refreshToken,
-      user: safeUser,
+      user,
     };
   }
 }

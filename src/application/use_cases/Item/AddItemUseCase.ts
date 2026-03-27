@@ -16,10 +16,6 @@ export class AddItemUseCase implements IAddItemUseCase  {
   async execute(data: AddItemDTO): Promise<Item> {
     const { name, description = "", quantity, price } = data;
 
-    if (!name || quantity < 0 || price < 0) {
-      throw new AppError(ERROR_MESSAGES.INVALID_ITEM_DATA, HTTP_STATUS_CODES.BAD_REQUEST);
-    }
-
     const item: Item = {
       name,
       description,

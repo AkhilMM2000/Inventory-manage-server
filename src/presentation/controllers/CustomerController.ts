@@ -6,6 +6,10 @@ import { IGetAllCustomers } from "../../application/use_cases/Customer/IGetAllCu
 import { IUpdateCustomerUseCase } from "../../application/use_cases/Customer/IUpdateCustomerUseCase";
 import { IDeleteCustomerUseCase } from "../../application/use_cases/Customer/IDeleteCustomerUseCase";
 import { ICustomerLedgerUseCase } from "../../application/use_cases/Customer/IGetCustomerLedgerUseCase";
+import { createCustomerSchema, updateCustomerSchema } from "../validators/CustomerValidator";
+import { CustomerMapper } from "../mappers/CustomerMapper";
+import { Customer } from "../../domain/models/Customer";
+
 @singleton()
 export class CustomerController{
    constructor(
@@ -20,11 +24,11 @@ export class CustomerController{
     @inject("ICustomerLedgerUseCase")
     private getCustomerLedgerUseCase:ICustomerLedgerUseCase
   ) {}
-  async addCustomer(req: Request, res: Response, next: NextFunction) {
+  async addCustomer(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-    
-      const customer = await this.addCustomerUseCase.execute(req.body);
-     res.status(HTTP_STATUS_CODES.CREATED).json({ customer });
+      const validData = createCustomerSchema.parse({ body: req.body });
+      const customer = await this.addCustomerUseCase.execute(validData.body);
+      res.status(HTTP_STATUS_CODES.CREATED).json({ customer: CustomerMapper.toResponse(customer) });
     } catch (error) {
       next(error);
     }
@@ -39,21 +43,23 @@ export class CustomerController{
      
       const result = await this.getAllCustomersUseCase.execute(page, limit, search);
 
-      res.status(HTTP_STATUS_CODES.OK).json(result);
+      res.status(HTTP_STATUS_CODES.OK).json(CustomerMapper.toPaginatedResponse(result));
     } catch (error) {
       next(error);
     }
   }
- async updateCustomer(req: Request, res: Response, next: NextFunction) {
+ async updateCustomer(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const { customerId } = req.params;
-    const filteredUpdate = Object.fromEntries(
-      Object.entries(req.body).filter(([, value]) => value !== undefined)
+    const validData = updateCustomerSchema.parse({
+      params: req.params,
+      body: req.body
+    });
+
+    const updated = await this.updateAllCustomerUseCase.execute(
+      validData.params.customerId, 
+      validData.body as unknown as Partial<Customer>
     );
-
-
-    const updated = await this.updateAllCustomerUseCase.execute(customerId,filteredUpdate);
-    res.status(HTTP_STATUS_CODES.OK).json({ customer: updated });
+    res.status(HTTP_STATUS_CODES.OK).json({ customer: CustomerMapper.toResponse(updated) });
   } catch (error) {
     next(error);
   }
@@ -72,7 +78,7 @@ res.status(HTTP_STATUS_CODES.OK).json({ message: "Customer deleted successfully"
   async getCustomerLedger(req: Request, res: Response, next: NextFunction) {
     try {
       const { customerId } = req.params;
-      console.log(customerId,'reach here customer ledger controller')
+      
       const ledger = await this.getCustomerLedgerUseCase.execute(customerId);
       res.status(HTTP_STATUS_CODES.OK).json(ledger);
     } catch (error) {

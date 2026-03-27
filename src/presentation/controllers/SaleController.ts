@@ -4,6 +4,9 @@ import { container, inject, singleton } from "tsyringe";
 import { ICreateSaleUseCase } from "../../application/use_cases/sales/ISaleUseCase";
 import { HTTP_STATUS_CODES } from "../../constants/HttpStatuscode";
 import { IGetAllSales } from "../../application/use_cases/sales/IGetAllSaleUseCase";
+import { createSaleSchema } from "../validators/SaleValidator";
+import { SaleMapper } from "../mappers/SaleMapper";
+
 @singleton()
 export class SaleController {
     constructor(
@@ -12,11 +15,14 @@ export class SaleController {
      @inject("IGetAllSales")
     private getAllSaleUseCase: IGetAllSales
   ) {}
-  async createSale(req: Request, res: Response, next: NextFunction) {
+  async createSale(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
+      const validData = createSaleSchema.parse({
+        body: req.body
+      });
     
-      const sale = await this.createSaleUseCase.execute(req.body);
-      res.status(HTTP_STATUS_CODES.OK).json({ sale });
+      const sale = await this.createSaleUseCase.execute(validData.body);
+      res.status(HTTP_STATUS_CODES.OK).json({ sale: SaleMapper.toResponse(sale) });
     } catch (error) {
       next(error);
     }
@@ -32,7 +38,7 @@ export class SaleController {
     
       const result = await this.getAllSaleUseCase.execute(page, limit, search, paymentType);
 
-      res.status(HTTP_STATUS_CODES.OK).json(result);
+      res.status(HTTP_STATUS_CODES.OK).json(SaleMapper.toPaginatedResponse(result));
     } catch (error) {
       next(error);
     }

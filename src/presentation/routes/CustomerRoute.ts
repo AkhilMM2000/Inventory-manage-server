@@ -6,7 +6,7 @@ const router = express.Router();
 const authMiddleware = container.resolve(AuthMiddleware);
 // 🔐 Protected route to add customer
 router.
-post("/", authMiddleware.protectRoute(), customerController.addCustomer.bind(customerController))
+post("/",  customerController.addCustomer.bind(customerController))
 .get("/", authMiddleware.protectRoute(), customerController.getAllCustomers.bind(customerController))   
 .put('/:customerId',authMiddleware.protectRoute(),customerController.updateCustomer.bind(customerController))
 .delete("/:customerId",authMiddleware.protectRoute(), customerController.deleteCustomer.bind(customerController))

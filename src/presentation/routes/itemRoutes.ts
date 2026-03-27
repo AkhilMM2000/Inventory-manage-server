@@ -2,7 +2,6 @@ import { Router } from "express";
 import { container } from "tsyringe";
 import { itemController } from "../../infrastructure/config/controllers"; 
 import { AuthMiddleware } from "../../middleware/AuthMiddleware"; 
-
 const router = Router();
 const authMiddleware = container.resolve(AuthMiddleware);
 

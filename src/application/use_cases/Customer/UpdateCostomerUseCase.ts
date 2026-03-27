@@ -1,8 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import { ICustomerRepository } from "../../../domain/repositories/ICustomerRepository"; 
-import { AppError } from "../../../domain/errors/AppError";
-import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode";
-import { ERROR_MESSAGES } from "../../../constants/ErrorMessage"; 
+import { EntityNotFoundError } from "../../../domain/errors/DomainExceptions"; 
 import { Customer } from "../../../domain/models/Customer";
 import { IUpdateCustomerUseCase } from "./IUpdateCustomerUseCase";
 
@@ -17,7 +15,7 @@ export class UpdateCustomerUseCase implements  IUpdateCustomerUseCase   {
     const updated = await this.customerRepository.update(id, updatedItem);
 
     if (!updated) {
-      throw new AppError(ERROR_MESSAGES.CUSTOMER_NOT_FOUND, HTTP_STATUS_CODES.NOT_FOUND);
+      throw new EntityNotFoundError("Customer");
     }
 
     return updated;
