@@ -34,6 +34,6 @@ export const updateCustomerSchema = z.object({
       state: z.string().regex(lettersOnly, "State must contain letters only").optional(),
       country: z.string().regex(lettersOnly, "Country must contain letters only").optional(),
       postalCode: z.string().regex(postalRegex, "Postal code must be 6 or 7 digits").optional(),
-    }).strict().optional(),
-  }).strict().refine(data => Object.keys(data).length > 0, "At least one field to update must be provided"),
+    }).optional(),
+  }).refine(data => Object.keys(data).length > 0, "At least one field to update must be provided"),
 });

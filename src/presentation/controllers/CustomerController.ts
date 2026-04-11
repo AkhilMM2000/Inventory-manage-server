@@ -50,6 +50,7 @@ export class CustomerController{
   }
  async updateCustomer(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
+    console.log(req.body,'reach edit ')
     const validData = updateCustomerSchema.parse({
       params: req.params,
       body: req.body
