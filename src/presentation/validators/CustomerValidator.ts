@@ -11,13 +11,14 @@ export const createCustomerSchema = z.object({
     mobile: z.string().min(10, "Mobile must be valid"),
     address: z.object({
       line1: z.string().regex(line1Regex, "Address line1 must contain letters/numbers only"),
+      line2: z.string().optional(),
       city: z.string().regex(lettersOnly, "City must contain letters only"),
       district: z.string().regex(lettersOnly, "District must contain letters only"),
       state: z.string().regex(lettersOnly, "State must contain letters only"),
       country: z.string().regex(lettersOnly, "Country must contain letters only"),
       postalCode: z.string().regex(postalRegex, "Postal code must be 6 or 7 digits"),
-    }).strict(),
-  }).strict(),
+    }),
+  }),
 });
 
 export const updateCustomerSchema = z.object({
@@ -29,6 +30,7 @@ export const updateCustomerSchema = z.object({
     mobile: z.string().optional(),
     address: z.object({
       line1: z.string().regex(line1Regex, "Address line1 must contain letters/numbers only").optional(),
+      line2: z.string().optional(),
       city: z.string().regex(lettersOnly, "City must contain letters only").optional(),
       district: z.string().regex(lettersOnly, "District must contain letters only").optional(),
       state: z.string().regex(lettersOnly, "State must contain letters only").optional(),

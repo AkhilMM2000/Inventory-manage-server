@@ -20,6 +20,7 @@ protected model = ItemModel
     const skip = (page - 1) * limit;
 
     const results = await this.model.aggregate([
+      { $sort: { createdAt: -1 } },
       {
         $facet: {
           data: [
@@ -65,6 +66,7 @@ async searchItems(query: string, page: number, limit: number): Promise<Paginated
           ],
         },
       },
+      { $sort: { createdAt: -1 } },
       {
         $facet: {
           data: [

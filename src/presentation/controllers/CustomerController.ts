@@ -26,6 +26,7 @@ export class CustomerController{
   ) {}
   async addCustomer(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
+      console.log(req.body,'customer')
       const validData = createCustomerSchema.parse({ body: req.body });
       const customer = await this.addCustomerUseCase.execute(validData.body);
       res.status(HTTP_STATUS_CODES.CREATED).json({ customer: CustomerMapper.toResponse(customer) });

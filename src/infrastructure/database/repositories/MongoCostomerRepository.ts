@@ -45,6 +45,7 @@ export class MongoCustomerRepository   extends BaseRepository<Customer> implemen
             ],
           },
         },
+        { $sort: { createdAt: -1 } },
         {
           $facet: {
             data: [
