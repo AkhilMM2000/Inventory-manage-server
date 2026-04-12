@@ -6,7 +6,7 @@ export const createItemSchema = z.object({
     name: z.string().min(1, "Name must be at least 1 character long").trim(),
     description: z.string().optional(),
     quantity: z.number().int().nonnegative("Quantity must be greater than or equal to 0"),
-    price: z.number().nonnegative("Price must be greater than or equal to 0"),
+    price: z.number().positive("Price must be greater than 0"),
   }),
 });
 
@@ -22,7 +22,7 @@ export const updateItemSchema = z.object({
     name: z.string().min(1).trim().optional(),
     description: z.string().optional(),
     quantity: z.number().int().nonnegative().optional(),
-    price: z.number().nonnegative().optional(),
+    price: z.number().positive("Price must be greater than 0").optional(),
   }).refine(data => Object.keys(data).length > 0, {
     message: "At least one field to update must be provided",
   }),

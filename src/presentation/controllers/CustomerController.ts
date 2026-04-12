@@ -57,6 +57,7 @@ export class CustomerController{
       body: req.body
     });
 
+    
     const updated = await this.updateAllCustomerUseCase.execute(
       validData.params.customerId, 
       validData.body as unknown as Partial<Customer>

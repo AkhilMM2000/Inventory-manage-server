@@ -1,3 +1,5 @@
+import { flattenObject } from "../../../shared/utils/objectUtils";
+
 export abstract class BaseRepository<T> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected abstract model: any;
@@ -15,7 +17,8 @@ export abstract class BaseRepository<T> {
   }
 
   async update(id: string, data: Partial<T>): Promise<T | null> {
-    const updated = await this.model.findByIdAndUpdate(id, data, { new: true });
+    const flattenedData = flattenObject(data);
+    const updated = await this.model.findByIdAndUpdate(id, flattenedData, { new: true });
     return updated ? this.map(updated) : null;
   }
 
