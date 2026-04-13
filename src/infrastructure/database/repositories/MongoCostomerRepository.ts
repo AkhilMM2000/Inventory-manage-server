@@ -13,14 +13,15 @@ export class MongoCustomerRepository   extends BaseRepository<Customer> implemen
 {
   protected model = CustomerModel;
 
-  protected map(doc: CustomerDocument): Customer {
+  protected map(doc: CustomerDocument & { salesCount?: number }): Customer {
     return {
-    id: (doc._id ?? doc.id)?.toString() || "",
+      id: (doc._id ?? doc.id)?.toString() || "",
       name: doc.name,
       address: doc.address,
       mobile: doc.mobile,
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
+      salesCount: doc.salesCount || 0,
     };
   }
 
@@ -46,6 +47,26 @@ export class MongoCustomerRepository   extends BaseRepository<Customer> implemen
           },
         },
         { $sort: { createdAt: -1 } },
+        {
+          $lookup: {
+            from: "sales",
+            let: { custId: { $toString: "$_id" } },
+            pipeline: [
+              { $match: { $expr: { $eq: ["$customerId", "$$custId"] } } }
+            ],
+            as: "salesData"
+          }
+        },
+        {
+          $addFields: {
+            salesCount: { $size: "$salesData" }
+          }
+        },
+        {
+          $project: {
+            salesData: 0
+          }
+        },
         {
           $facet: {
             data: [

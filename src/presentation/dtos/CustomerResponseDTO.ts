@@ -7,4 +7,5 @@ export interface CustomerResponseDTO {
   mobile: string;
   createdAt?: Date;
   updatedAt?: Date;
+  salesCount?: number;
 }

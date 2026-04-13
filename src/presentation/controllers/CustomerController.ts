@@ -83,9 +83,12 @@ res.status(HTTP_STATUS_CODES.OK).json({ message: "Customer deleted successfully"
       const { customerId } = req.params;
       
       const ledger = await this.getCustomerLedgerUseCase.execute(customerId);
+      console.log(ledger,'customer ledger loead')
       res.status(HTTP_STATUS_CODES.OK).json(ledger);
     } catch (error) {
       next(error);
     }
   }
 }
+
+

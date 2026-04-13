@@ -11,6 +11,7 @@ export class CustomerMapper {
       mobile: customer.mobile,
       createdAt: customer.createdAt,
       updatedAt: customer.updatedAt,
+      salesCount: customer.salesCount || 0,
     };
   }
 

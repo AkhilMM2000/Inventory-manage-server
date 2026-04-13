@@ -15,4 +15,5 @@ export interface Customer {
   mobile: string;
   createdAt?: Date;
   updatedAt?: Date;
+  salesCount?: number;
 }
