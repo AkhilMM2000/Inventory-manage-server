@@ -19,7 +19,7 @@ import { IAddCustomerUseCase } from "../../application/use_cases/Customer/IAddCu
 import { GetAllCustomers } from "../../application/use_cases/Customer/GetAllCustomerUseCase";
 import { IGetAllCustomers } from "../../application/use_cases/Customer/IGetAllCustomerUseCase";
 import { IUpdateCustomerUseCase } from "../../application/use_cases/Customer/IUpdateCustomerUseCase";
-import { UpdateCustomerUseCase } from "../../application/use_cases/Customer/UpdateCostomerUseCase";
+import { UpdateCustomerUseCase } from "../../application/use_cases/Customer/UpdateCustomerUseCase";
 import { IDeleteCustomerUseCase } from "../../application/use_cases/Customer/IDeleteCustomerUseCase";
 import { DeleteCustomerUseCase } from "../../application/use_cases/Customer/DeleteCustomerUseCase";
 import { ILoginUserUseCase } from "../../application/use_cases/Auth/ILoginUserUseCase";

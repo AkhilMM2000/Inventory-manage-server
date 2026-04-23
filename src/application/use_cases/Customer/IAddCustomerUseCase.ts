@@ -1,12 +1,6 @@
-import { Customer, Address } from "../../../domain/models/Customer";
+import { AddCustomerRequestDTO, CustomerResponseDTO } from "../../../domain/dtos/CustomerDTO";
  
-export interface AddCustomerDTO {
-  name: string;
-  address: Address;
-  mobile: string;
-}
-
 export interface IAddCustomerUseCase {
-  execute(data: AddCustomerDTO): Promise<Customer>;
+  execute(data: AddCustomerRequestDTO): Promise<CustomerResponseDTO>;
 }
 

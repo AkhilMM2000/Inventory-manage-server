@@ -5,6 +5,8 @@ import { ICustomerRepository } from "../../../domain/repositories/ICustomerRepos
 import { AppError } from "../../../domain/errors/AppError";
 import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode"; 
 import { ICustomerLedgerUseCase } from "./IGetCustomerLedgerUseCase";
+import { CustomerLedgerResponseDTO } from "../../../domain/dtos/CustomerDTO";
+import { CustomerMapper } from "../../mappers/CustomerMapper";
 
 @injectable()
 export class GetCustomerLedgerUseCase implements  ICustomerLedgerUseCase {
@@ -13,7 +15,7 @@ export class GetCustomerLedgerUseCase implements  ICustomerLedgerUseCase {
     @inject("ICustomerRepository") private customerRepo: ICustomerRepository
   ) {}
 
-  async execute(customerId: string):Promise<any> {
+  async execute(customerId: string):Promise<CustomerLedgerResponseDTO> {
     const customer = await this.customerRepo.findById(customerId);
     if (!customer) {
       throw new AppError("Customer not found", HTTP_STATUS_CODES.NOT_FOUND);
@@ -33,7 +35,7 @@ export class GetCustomerLedgerUseCase implements  ICustomerLedgerUseCase {
     };
 
     return {
-      customer,
+      customer: CustomerMapper.toResponse(customer),
       sales,
       summary,
     };

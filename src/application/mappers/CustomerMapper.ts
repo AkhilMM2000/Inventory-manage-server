@@ -1,5 +1,5 @@
 import { Customer } from "../../domain/models/Customer";
-import { CustomerResponseDTO } from "../dtos/CustomerResponseDTO";
+import { CustomerResponseDTO } from "../../domain/dtos/CustomerDTO";
 import { PaginatedResult } from "../../shared/PaginatedResult";
 
 export class CustomerMapper {

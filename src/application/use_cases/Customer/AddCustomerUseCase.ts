@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe";
 import { ICustomerRepository } from "../../../domain/repositories/ICustomerRepository";
-import { Customer, Address } from "../../../domain/models/Customer";
-import { AppError } from "../../../domain/errors/AppError";
-import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode";
-import { ERROR_MESSAGES } from "../../../constants/ErrorMessage";
-import { IAddCustomerUseCase, AddCustomerDTO } from "./IAddCustomerUseCase";
+import { Customer} from "../../../domain/models/Customer";
+
+import { IAddCustomerUseCase } from "./IAddCustomerUseCase";
+import { AddCustomerRequestDTO, CustomerResponseDTO } from "../../../domain/dtos/CustomerDTO";
+import { CustomerMapper } from "../../mappers/CustomerMapper";
 
 
 @injectable()
@@ -14,7 +14,7 @@ export class AddCustomer implements IAddCustomerUseCase {
     private customerRepository: ICustomerRepository
   ) {}
 
-  async execute(data: AddCustomerDTO): Promise<Customer> {
+  async execute(data: AddCustomerRequestDTO): Promise<CustomerResponseDTO> {
     const { name, address, mobile } = data;
     const newCustomer: Customer = {
       name,
@@ -22,6 +22,7 @@ export class AddCustomer implements IAddCustomerUseCase {
       mobile,
     };
 
-    return await this.customerRepository.create(newCustomer);
+    const customer = await this.customerRepository.create(newCustomer);
+    return CustomerMapper.toResponse(customer);
   }
 }

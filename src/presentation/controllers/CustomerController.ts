@@ -7,8 +7,7 @@ import { IUpdateCustomerUseCase } from "../../application/use_cases/Customer/IUp
 import { IDeleteCustomerUseCase } from "../../application/use_cases/Customer/IDeleteCustomerUseCase";
 import { ICustomerLedgerUseCase } from "../../application/use_cases/Customer/IGetCustomerLedgerUseCase";
 import { createCustomerSchema, updateCustomerSchema } from "../validators/CustomerValidator";
-import { CustomerMapper } from "../mappers/CustomerMapper";
-import { Customer } from "../../domain/models/Customer";
+
 
 @singleton()
 export class CustomerController{
@@ -29,7 +28,7 @@ export class CustomerController{
       console.log(req.body,'customer')
       const validData = createCustomerSchema.parse({ body: req.body });
       const customer = await this.addCustomerUseCase.execute(validData.body);
-      res.status(HTTP_STATUS_CODES.CREATED).json({ customer: CustomerMapper.toResponse(customer) });
+      res.status(HTTP_STATUS_CODES.CREATED).json({ customer });
     } catch (error) {
       next(error);
     }
@@ -44,7 +43,7 @@ export class CustomerController{
      
       const result = await this.getAllCustomersUseCase.execute(page, limit, search);
 
-      res.status(HTTP_STATUS_CODES.OK).json(CustomerMapper.toPaginatedResponse(result));
+      res.status(HTTP_STATUS_CODES.OK).json(result);
     } catch (error) {
       next(error);
     }
@@ -58,11 +57,11 @@ export class CustomerController{
     });
 
     
-    const updated = await this.updateAllCustomerUseCase.execute(
+    const customer = await this.updateAllCustomerUseCase.execute(
       validData.params.customerId, 
-      validData.body as unknown as Partial<Customer>
+      validData.body as any
     );
-    res.status(HTTP_STATUS_CODES.OK).json({ customer: CustomerMapper.toResponse(updated) });
+    res.status(HTTP_STATUS_CODES.OK).json({ customer });
   } catch (error) {
     next(error);
   }
