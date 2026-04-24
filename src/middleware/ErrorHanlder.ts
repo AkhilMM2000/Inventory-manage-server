@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { AppError } from "../domain/errors/AppError";
-import { DomainError, UserAlreadyExistsError, InvalidCredentialsError, EntityNotFoundError, InsufficientStockError } from "../domain/errors/DomainExceptions";
+import {UserAlreadyExistsError, InvalidCredentialsError, EntityNotFoundError, InsufficientStockError } from "../domain/errors/DomainExceptions";
 import { ZodError, ZodIssue } from "zod";
+import { HTTP_STATUS_CODES } from "../constants/HttpStatuscode";
 
 export const errorHandler = (
   err: unknown,
@@ -16,27 +17,27 @@ export const errorHandler = (
   }
 
   if (err instanceof UserAlreadyExistsError) {
-    res.status(409).json({ error: err.message });
+    res.status(HTTP_STATUS_CODES.CONFLICT).json({ error: err.message });
     return;
   }
 
   if (err instanceof InvalidCredentialsError) {
-    res.status(401).json({ error: err.message });
+    res.status(HTTP_STATUS_CODES.UNAUTHORIZED).json({ error: err.message });
     return;
   }
 
   if (err instanceof EntityNotFoundError) {
-    res.status(404).json({ error: err.message });
+    res.status(HTTP_STATUS_CODES.NOT_FOUND).json({ error: err.message });
     return;
   }
 
   if (err instanceof InsufficientStockError) {
-    res.status(400).json({ error: err.message });
+    res.status(HTTP_STATUS_CODES.BAD_REQUEST).json({ error: err.message });
     return;
   }
 
   if (err instanceof ZodError) {
-    res.status(400).json({
+    res.status(HTTP_STATUS_CODES.BAD_REQUEST).json({
       error: "Validation Error",
       details: err.issues.map((e: ZodIssue) => ({ message: `${e.path.join('.')} is ${e.message}` }))
     });
@@ -44,5 +45,5 @@ export const errorHandler = (
   }
 
   console.error(err);
-  res.status(500).json({ error: "Internal Server Error" });
+  res.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
 };
