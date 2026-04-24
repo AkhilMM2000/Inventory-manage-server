@@ -1,5 +1,5 @@
 import { User } from "../../domain/models/User";
-import { UserResponseDTO } from "../dtos/UserResponseDTO";
+import { UserResponseDTO } from "../../domain/dtos/UserDTO";
 
 export class UserMapper {
   static toResponse(user: User): UserResponseDTO {

@@ -1,12 +1,9 @@
-import { User } from "../../../domain/models/User";
+import { LoginRequestDTO, UserResponseDTO } from "../../../domain/dtos/UserDTO";
 
 export interface ILoginUserUseCase {
-  execute(data: {
-    email: string;
-    password: string;
-  }): Promise<{
+  execute(data: LoginRequestDTO): Promise<{
     accessToken: string;
     refreshToken: string;
-    user: User;
+    user: UserResponseDTO;
   }>;
 }

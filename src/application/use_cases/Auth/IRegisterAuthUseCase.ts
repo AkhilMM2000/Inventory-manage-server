@@ -1,11 +1,5 @@
-
-import { User } from "../../../domain/models/User";
-export interface RegisterUserDTO {
-  fullName: string;
-  email: string;
-  password: string;
-}
+import { RegisterRequestDTO, UserResponseDTO } from "../../../domain/dtos/UserDTO";
 
 export interface IUserAuthUseCase {
-  execute(data: RegisterUserDTO): Promise<User>;
+  execute(data: RegisterRequestDTO): Promise<UserResponseDTO>;
 }

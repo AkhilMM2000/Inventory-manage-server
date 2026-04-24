@@ -7,7 +7,7 @@ import { ILoginUserUseCase } from "../../application/use_cases/Auth/ILoginUserUs
 import { IUserAuthUseCase } from "../../application/use_cases/Auth/IRegisterAuthUseCase";
 import { IRefreshAccessTokenUseCase } from "../../application/use_cases/Auth/IRefreshAccessTokenUseCase";
 import { registerSchema, loginSchema } from "../validators/UserValidator";
-import { UserMapper } from "../mappers/UserMapper";
+
 @singleton()
 export class UserController {
     constructor(
@@ -24,7 +24,7 @@ export class UserController {
     
       const user = await this.registerUseCase.execute(validData.body);
 
-      res.status(HTTP_STATUS_CODES.CREATED).json({ user: UserMapper.toResponse(user) });
+      res.status(HTTP_STATUS_CODES.CREATED).json({ user });
     } catch (err) {
       next(err);
     }
@@ -43,7 +43,7 @@ export class UserController {
 
     res.status(HTTP_STATUS_CODES.OK).json({
       accessToken,
-      user: UserMapper.toResponse(user),
+      user,
     });
   } catch (err) {
     next(err);
@@ -66,7 +66,7 @@ export class UserController {
     if (!req.user) {
         throw new Error("User required");
     }
-    res.status(HTTP_STATUS_CODES.OK).json({ user: UserMapper.toResponse(req.user as any) });
+    res.status(HTTP_STATUS_CODES.OK).json({ user: req.user });
   } catch (err) {
     next(err);
   }

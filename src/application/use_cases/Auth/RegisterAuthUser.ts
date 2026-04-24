@@ -4,11 +4,9 @@ import { HashService } from "../../services/HashService";
 import { User } from "../../../domain/models/User";
 import { UserAlreadyExistsError } from "../../../domain/errors/DomainExceptions";
 import { IUserAuthUseCase } from "./IRegisterAuthUseCase";
-interface RegisterUserDTO {
-  fullName: string;
-  email: string;
-  password: string;
-}
+import { RegisterRequestDTO, UserResponseDTO } from "../../../domain/dtos/UserDTO";
+import { UserMapper } from "../../mappers/UserMapper";
+
 @injectable()
 export class RegisterUserUseCase implements IUserAuthUseCase {
   constructor(
@@ -16,7 +14,7 @@ export class RegisterUserUseCase implements IUserAuthUseCase {
     @inject("IHashService") private hashService: HashService
   ) {}
   
-  async execute(data: RegisterUserDTO): Promise<User> {
+  async execute(data: RegisterRequestDTO): Promise<UserResponseDTO> {
     const { fullName, email, password } = data;
 
     // Check if user already exists
@@ -37,6 +35,6 @@ export class RegisterUserUseCase implements IUserAuthUseCase {
 
     const createdUser = await this.userRepository.create(newUser);
 
-    return createdUser;
+    return UserMapper.toResponse(createdUser);
   }
 }

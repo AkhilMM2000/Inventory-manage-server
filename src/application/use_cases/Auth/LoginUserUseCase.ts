@@ -5,10 +5,9 @@ import { AuthService } from "../../services/AuthServices";
 import { InvalidCredentialsError } from "../../../domain/errors/DomainExceptions";
 import { User } from "../../../domain/models/User";
 import { ILoginUserUseCase } from "./ILoginUserUseCase";
-interface LoginDTO {
-  email: string;
-  password: string;
-}
+import { LoginRequestDTO, UserResponseDTO } from "../../../domain/dtos/UserDTO";
+import { UserMapper } from "../../mappers/UserMapper";
+
 @injectable()
 export class LoginUserUseCase implements ILoginUserUseCase {
   constructor(
@@ -17,10 +16,10 @@ export class LoginUserUseCase implements ILoginUserUseCase {
     @inject("IAuthService") private authService: AuthService
   ) {}
 
-  async execute(data: LoginDTO): Promise<{
+  async execute(data: LoginRequestDTO): Promise<{
     accessToken: string;
     refreshToken: string;
-    user: User;
+    user: UserResponseDTO;
   }> {
     const { email, password } = data;
 
@@ -41,7 +40,7 @@ export class LoginUserUseCase implements ILoginUserUseCase {
     return {
       accessToken,
       refreshToken,
-      user,
+      user: UserMapper.toResponse(user),
     };
   }
 }
