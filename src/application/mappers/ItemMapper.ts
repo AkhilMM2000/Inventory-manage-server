@@ -1,5 +1,5 @@
 import { Item } from "../../domain/models/Item";
-import { ItemResponseDTO } from "../dtos/ItemResponseDTO";
+import { ItemResponseDTO } from "../../domain/dtos/ItemDTO";
 import { PaginatedResult } from "../../shared/PaginatedResult";
 
 export class ItemMapper {

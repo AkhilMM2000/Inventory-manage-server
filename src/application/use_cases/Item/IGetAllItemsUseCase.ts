@@ -1,6 +1,6 @@
-import { Item } from "../../../domain/models/Item";
 import { PaginatedResult } from "../../../shared/PaginatedResult";
+import { ItemResponseDTO } from "../../../domain/dtos/ItemDTO";
 
 export interface IGetAllItemsUseCase {
-  execute(page?: number, limit?: number): Promise<PaginatedResult<Item>>;
+  execute(page?: number, limit?: number): Promise<PaginatedResult<ItemResponseDTO>>;
 }

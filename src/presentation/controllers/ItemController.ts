@@ -9,7 +9,6 @@ import { IGetItemByIdUseCase } from "../../application/use_cases/Item/IGetItemBy
 import { ISearchItemsUseCase } from "../../application/use_cases/Item/ISearchItemsUseCase";
 import { IUpdateItemUseCase } from "../../application/use_cases/Item/IUpdateItemUseCase";
 import { createItemSchema, updateItemSchema } from "../validators/ItemValidator";
-import { ItemMapper } from "../mappers/ItemMapper";
 import { ZodError } from "zod";
 
 @singleton()
@@ -35,9 +34,9 @@ export class ItemController {
         body: req.body
       });
 
-      const createdItem = await this.addItemUseCase.execute(validData.body);
+      const item = await this.addItemUseCase.execute(validData.body);
  
-      res.status(HTTP_STATUS_CODES.CREATED).json({ item: ItemMapper.toResponse(createdItem) });
+      res.status(HTTP_STATUS_CODES.CREATED).json({ item });
     } catch (error) {
       next(error);
     }
@@ -60,9 +59,9 @@ export class ItemController {
       const limit = parseInt(req.query.limit as string) || 10;
 
 
-      const getAllItems = await this.getAllItemUseCase.execute(page, limit);
+      const result = await this.getAllItemUseCase.execute(page, limit);
  
-      res.status(HTTP_STATUS_CODES.OK).json(ItemMapper.toPaginatedResponse(getAllItems));
+      res.status(HTTP_STATUS_CODES.OK).json(result);
     } catch (err) {
       next(err);
     }
@@ -76,7 +75,7 @@ export class ItemController {
 
       const result = await this.searchItemsUseCase.execute(query, page, limit);
  
-      res.status(HTTP_STATUS_CODES.OK).json(ItemMapper.toPaginatedResponse(result));
+      res.status(HTTP_STATUS_CODES.OK).json(result);
     } catch (err) {
       next(err);
     }
@@ -85,7 +84,7 @@ export class ItemController {
     try {
       const { itemId } = req.params;
       const item = await this.getItemByIdUseCase.execute(itemId)
-      res.status(HTTP_STATUS_CODES.OK).json({ item: ItemMapper.toResponse(item) });
+      res.status(HTTP_STATUS_CODES.OK).json({ item });
     } catch (err) {
       next(err);
     }
@@ -99,7 +98,7 @@ export class ItemController {
 
       const item = await this.updateItemUseCase.execute(validData.params.itemId, validData.body);
  
-      res.status(HTTP_STATUS_CODES.OK).json({ item: ItemMapper.toResponse(item) });
+      res.status(HTTP_STATUS_CODES.OK).json({ item });
     } catch (error) {
       next(error);
     }

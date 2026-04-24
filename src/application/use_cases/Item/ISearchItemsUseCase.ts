@@ -1,6 +1,6 @@
 import { PaginatedResult } from "../../../shared/PaginatedResult";
-import { Item } from "../../../domain/models/Item";
+import { ItemResponseDTO } from "../../../domain/dtos/ItemDTO";
 
 export interface ISearchItemsUseCase {
-  execute(query: string, page?: number, limit?: number): Promise<PaginatedResult<Item>>;
+  execute(query: string, page?: number, limit?: number): Promise<PaginatedResult<ItemResponseDTO>>;
 }

@@ -4,7 +4,9 @@ import { Item } from "../../../domain/models/Item";
 import { AppError } from "../../../domain/errors/AppError";
 import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode";
 import { ERROR_MESSAGES } from "../../../constants/ErrorMessage";
-import { AddItemDTO, IAddItemUseCase } from "./IAddItemUseCase";
+import { IAddItemUseCase } from "./IAddItemUseCase";
+import { AddItemRequestDTO, ItemResponseDTO } from "../../../domain/dtos/ItemDTO";
+import { ItemMapper } from "../../mappers/ItemMapper";
 
 @injectable()
 export class AddItemUseCase implements IAddItemUseCase  {
@@ -13,7 +15,7 @@ export class AddItemUseCase implements IAddItemUseCase  {
     private itemRepository: IItemRepository
   ) {}
 
-  async execute(data: AddItemDTO): Promise<Item> {
+  async execute(data: AddItemRequestDTO): Promise<ItemResponseDTO> {
     const { name, description = "", quantity, price } = data;
 
     const item: Item = {
@@ -23,6 +25,7 @@ export class AddItemUseCase implements IAddItemUseCase  {
       price,
     };
 
-    return await this.itemRepository.create(item);
+    const createdItem = await this.itemRepository.create(item);
+    return ItemMapper.toResponse(createdItem);
   }
 }

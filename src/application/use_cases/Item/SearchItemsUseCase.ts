@@ -1,9 +1,10 @@
 import { inject, injectable } from "tsyringe";
 
 import { IItemRepository } from "../../../domain/repositories/IItemRepository"; 
-import { Item } from "../../../domain/models/Item"; 
 import { PaginatedResult } from "../../../shared/PaginatedResult"; 
 import { ISearchItemsUseCase } from "./ISearchItemsUseCase";
+import { ItemResponseDTO } from "../../../domain/dtos/ItemDTO";
+import { ItemMapper } from "../../mappers/ItemMapper";
 
 @injectable()
 export class SearchItemsUseCase implements ISearchItemsUseCase {
@@ -12,7 +13,8 @@ export class SearchItemsUseCase implements ISearchItemsUseCase {
     private itemRepository: IItemRepository
   ) {}
 
-  async execute(query: string, page = 1, limit = 10): Promise<PaginatedResult<Item>> {
-    return this.itemRepository.searchItems(query, page, limit);
+  async execute(query: string, page = 1, limit = 10): Promise<PaginatedResult<ItemResponseDTO>> {
+    const result = await this.itemRepository.searchItems(query, page, limit);
+    return ItemMapper.toPaginatedResponse(result);
   }
 }
