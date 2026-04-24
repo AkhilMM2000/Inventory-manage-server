@@ -1,4 +1,11 @@
-import { SaleItem } from "../../domain/models/Sales";
+import { SaleItem } from "../models/Sales";
+
+export interface CreateSaleRequestDTO {
+  customerId: string;
+  customerName: string;
+  paymentType: "Cash" | "Credit";
+  items: SaleItem[];
+}
 
 export interface SaleResponseDTO {
   id: string;

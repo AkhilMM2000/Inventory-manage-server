@@ -5,13 +5,9 @@ import { IItemRepository } from "../../../domain/repositories/IItemRepository";
 import { Sale,SaleItem } from "../../../domain/models/Sales"; 
 import { EntityNotFoundError, InsufficientStockError } from "../../../domain/errors/DomainExceptions";
 import { ICreateSaleUseCase } from "./ISaleUseCase";
+import { CreateSaleRequestDTO, SaleResponseDTO } from "../../../domain/dtos/SaleDTO";
+import { SaleMapper } from "../../mappers/SaleMapper";
 
-interface CreateSaleDTO {
-  customerId: string;
-  customerName: string;
-  paymentType: "Cash" | "Credit";
-  items: SaleItem[];
-}
 
 @injectable()
 export class  CreateSale implements ICreateSaleUseCase{
@@ -23,7 +19,7 @@ export class  CreateSale implements ICreateSaleUseCase{
     private itemRepository: IItemRepository
   ) {}
 
-  async execute(data: CreateSaleDTO): Promise<Sale> {
+  async execute(data: CreateSaleRequestDTO): Promise<SaleResponseDTO> {
     const { customerId, customerName, paymentType, items } = data;
 
 
@@ -54,6 +50,7 @@ export class  CreateSale implements ICreateSaleUseCase{
       totalAmount,
     };
 
-    return await this.saleRepository.create(newSale);
+    const sale = await this.saleRepository.create(newSale);
+    return SaleMapper.toResponse(sale);
   }
 }

@@ -6,7 +6,8 @@ import { HTTP_STATUS_CODES } from "../../../constants/HttpStatuscode";
 import { ERROR_MESSAGES } from "../../../constants/ErrorMessage";
 import { IGetAllSales } from "./IGetAllSaleUseCase";
 import { PaginatedResult } from "../../../shared/PaginatedResult";
-import { Sale } from "../../../domain/models/Sales";
+import { SaleResponseDTO } from "../../../domain/dtos/SaleDTO";
+import { SaleMapper } from "../../mappers/SaleMapper";
 
 @injectable()
 export class GetAllSales implements IGetAllSales {
@@ -20,7 +21,7 @@ export class GetAllSales implements IGetAllSales {
     limit: number,
     search?: string,
     paymentType?: "Cash" | "Credit"
-  ):Promise<PaginatedResult<Sale>>
+  ):Promise<PaginatedResult<SaleResponseDTO>>
   
   {
     if (page <= 0 || limit <= 0) {
@@ -30,6 +31,7 @@ export class GetAllSales implements IGetAllSales {
       );
     }
 
-    return await this.saleRepository.getAllSales(page, limit, search, paymentType);
+    const result = await this.saleRepository.getAllSales(page, limit, search, paymentType);
+    return SaleMapper.toPaginatedResponse(result);
   }
 }

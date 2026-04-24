@@ -1,5 +1,5 @@
-import { Sale } from "../../../domain/models/Sales";
 import { PaginatedResult } from "../../../shared/PaginatedResult";
+import { SaleResponseDTO } from "../../../domain/dtos/SaleDTO";
 
 export interface IGetAllSales {
   execute(
@@ -7,5 +7,5 @@ export interface IGetAllSales {
     limit: number,
     search?: string,
     paymentType?: "Cash" | "Credit"
-  ):Promise<PaginatedResult<Sale>>;
+  ):Promise<PaginatedResult<SaleResponseDTO>>;
 }

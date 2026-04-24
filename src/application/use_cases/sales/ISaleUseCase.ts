@@ -1,12 +1,5 @@
-import { Sale,SaleItem } from "../../../domain/models/Sales";
-
-export interface CreateSaleDTO {
-  customerId: string;
-  customerName: string;
-  paymentType: "Cash" | "Credit";
-  items: SaleItem[];
-}
+import { CreateSaleRequestDTO, SaleResponseDTO } from "../../../domain/dtos/SaleDTO";
 
 export interface ICreateSaleUseCase {
-  execute(data: CreateSaleDTO): Promise<Sale>;
+  execute(data: CreateSaleRequestDTO): Promise<SaleResponseDTO>;
 }

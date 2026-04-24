@@ -1,5 +1,5 @@
 import { Sale } from "../../domain/models/Sales";
-import { SaleResponseDTO } from "../dtos/SaleResponseDTO";
+import { SaleResponseDTO } from "../../domain/dtos/SaleDTO";
 import { PaginatedResult } from "../../shared/PaginatedResult";
 
 export class SaleMapper {

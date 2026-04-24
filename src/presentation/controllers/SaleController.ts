@@ -5,7 +5,6 @@ import { ICreateSaleUseCase } from "../../application/use_cases/sales/ISaleUseCa
 import { HTTP_STATUS_CODES } from "../../constants/HttpStatuscode";
 import { IGetAllSales } from "../../application/use_cases/sales/IGetAllSaleUseCase";
 import { createSaleSchema } from "../validators/SaleValidator";
-import { SaleMapper } from "../mappers/SaleMapper";
 
 @singleton()
 export class SaleController {
@@ -22,7 +21,7 @@ export class SaleController {
       });
     
       const sale = await this.createSaleUseCase.execute(validData.body);
-      res.status(HTTP_STATUS_CODES.OK).json({ sale: SaleMapper.toResponse(sale) });
+      res.status(HTTP_STATUS_CODES.OK).json({ sale });
     } catch (error) {
       next(error);
     }
@@ -38,7 +37,7 @@ export class SaleController {
     
       const result = await this.getAllSaleUseCase.execute(page, limit, search, paymentType);
 
-      res.status(HTTP_STATUS_CODES.OK).json(SaleMapper.toPaginatedResponse(result));
+      res.status(HTTP_STATUS_CODES.OK).json(result);
     } catch (error) {
       next(error);
     }
