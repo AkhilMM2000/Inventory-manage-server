@@ -9,7 +9,7 @@ import { IGetItemByIdUseCase } from "../../application/use_cases/Item/IGetItemBy
 import { ISearchItemsUseCase } from "../../application/use_cases/Item/ISearchItemsUseCase";
 import { IUpdateItemUseCase } from "../../application/use_cases/Item/IUpdateItemUseCase";
 import { createItemSchema, updateItemSchema } from "../validators/ItemValidator";
-import { ZodError } from "zod";
+
 
 @singleton()
 export class ItemController {
