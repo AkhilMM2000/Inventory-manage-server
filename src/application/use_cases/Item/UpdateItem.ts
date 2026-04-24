@@ -10,11 +10,11 @@ import { ItemMapper } from "../../mappers/ItemMapper";
 export class UpdateItemUseCase implements IUpdateItemUseCase {
   constructor(
     @inject("IItemRepository")
-    private itemRepository: IItemRepository
+    private _itemRepository: IItemRepository
   ) {}
 
   async execute(id: string, updatedItem: Partial<Item>): Promise<ItemResponseDTO> {
-    const item = await this.itemRepository.update(id, updatedItem);
+    const item = await this._itemRepository.update(id, updatedItem);
    console.log(item,id,'reach here')
     if (!item) {
       throw new EntityNotFoundError("Item");

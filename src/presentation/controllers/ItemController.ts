@@ -15,17 +15,17 @@ import { createItemSchema, updateItemSchema } from "../validators/ItemValidator"
 export class ItemController {
   constructor(
     @inject("IAddItemUseCase")
-    private addItemUseCase: IAddItemUseCase,
+    private _addItemUseCase: IAddItemUseCase,
     @inject("IDeleteItemUseCase")
-    private deleteItemUseCase: IDeleteItemUseCase,
+    private _deleteItemUseCase: IDeleteItemUseCase,
     @inject("IGetAllItemsUseCase")
-    private getAllItemUseCase: IGetAllItemsUseCase,
+    private _getAllItemUseCase: IGetAllItemsUseCase,
     @inject("IGetItemByIdUseCase")
-    private getItemByIdUseCase: IGetItemByIdUseCase,
+    private _getItemByIdUseCase: IGetItemByIdUseCase,
     @inject("ISearchItemsUseCase")
-    private searchItemsUseCase: ISearchItemsUseCase,
+    private _searchItemsUseCase: ISearchItemsUseCase,
     @inject("IUpdateItemUseCase")
-    private updateItemUseCase: IUpdateItemUseCase,
+    private _updateItemUseCase: IUpdateItemUseCase,
   ) { }
 
   async addItem(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -34,7 +34,7 @@ export class ItemController {
         body: req.body
       });
 
-      const item = await this.addItemUseCase.execute(validData.body);
+      const item = await this._addItemUseCase.execute(validData.body);
  
       res.status(HTTP_STATUS_CODES.CREATED).json({ item });
     } catch (error) {
@@ -45,7 +45,7 @@ export class ItemController {
   async deleteItem(req: Request, res: Response, next: NextFunction) {
     try {
       const { itemId } = req.params;
-      this.deleteItemUseCase.execute(itemId)
+      this._deleteItemUseCase.execute(itemId)
 
       res.status(HTTP_STATUS_CODES.OK).json({ message: ERROR_MESSAGES.ITEM_DELETED });
     } catch (err) {
@@ -59,7 +59,7 @@ export class ItemController {
       const limit = parseInt(req.query.limit as string) || 10;
 
 
-      const result = await this.getAllItemUseCase.execute(page, limit);
+      const result = await this._getAllItemUseCase.execute(page, limit);
  
       res.status(HTTP_STATUS_CODES.OK).json(result);
     } catch (err) {
@@ -73,7 +73,7 @@ export class ItemController {
       const limit = parseInt(req.query.limit as string) || 10;
 
 
-      const result = await this.searchItemsUseCase.execute(query, page, limit);
+      const result = await this._searchItemsUseCase.execute(query, page, limit);
  
       res.status(HTTP_STATUS_CODES.OK).json(result);
     } catch (err) {
@@ -83,7 +83,7 @@ export class ItemController {
   async getItemById(req: Request, res: Response, next: NextFunction) {
     try {
       const { itemId } = req.params;
-      const item = await this.getItemByIdUseCase.execute(itemId)
+      const item = await this._getItemByIdUseCase.execute(itemId)
       res.status(HTTP_STATUS_CODES.OK).json({ item });
     } catch (err) {
       next(err);
@@ -96,7 +96,7 @@ export class ItemController {
         body: req.body
       });
 
-      const item = await this.updateItemUseCase.execute(validData.params.itemId, validData.body);
+      const item = await this._updateItemUseCase.execute(validData.params.itemId, validData.body);
  
       res.status(HTTP_STATUS_CODES.OK).json({ item });
     } catch (error) {

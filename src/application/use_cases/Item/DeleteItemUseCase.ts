@@ -9,11 +9,11 @@ import { IDeleteItemUseCase } from "./IDeleteItemUseCase";
 export class DeleteItemUseCase implements IDeleteItemUseCase {
   constructor(
     @inject("IItemRepository")
-    private itemRepository: IItemRepository
+    private _itemRepository: IItemRepository
   ) {}
 
   async execute(id: string): Promise<void> {
-    const deleted = await this.itemRepository.delete(id);
+    const deleted = await this._itemRepository.delete(id);
 
     if (!deleted) {
       throw new AppError(ERROR_MESSAGES.NOT_FOUND_OR_DELETE_ERROR, HTTP_STATUS_CODES.NOT_FOUND);

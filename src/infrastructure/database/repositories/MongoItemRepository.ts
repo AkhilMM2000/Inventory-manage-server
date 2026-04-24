@@ -12,14 +12,14 @@ import { BaseRepository } from "./BaseRepository";
  
 @injectable()
 export class MongoItemRepository extends BaseRepository<Item> implements IItemRepository {
-protected model = ItemModel
+protected _model = ItemModel
 
 
   async getAllItems(page: number, limit: number): Promise<PaginatedResult<Item>> {
   try {
     const skip = (page - 1) * limit;
 
-    const results = await this.model.aggregate([
+    const results = await this._model.aggregate([
       { $sort: { createdAt: -1 } },
       {
         $facet: {
@@ -57,7 +57,7 @@ async searchItems(query: string, page: number, limit: number): Promise<Paginated
     const regex = new RegExp(query, "i");
     const skip = (page - 1) * limit;
 
-    const results = await this.model.aggregate([
+    const results = await this._model.aggregate([
       {
         $match: {
           $or: [

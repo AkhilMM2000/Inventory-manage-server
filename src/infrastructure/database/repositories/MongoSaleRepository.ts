@@ -11,7 +11,7 @@ import { BaseRepository } from "./BaseRepository";
 export class MongoSaleRepository extends BaseRepository<Sale> implements ISaleRepository {
  
 
-  protected model = SaleModel;
+  protected _model = SaleModel;
   protected map(doc: SaleDocument): Sale {
     return {
       id: (doc._id ?? doc.id)?.toString() || "",
@@ -54,8 +54,8 @@ export class MongoSaleRepository extends BaseRepository<Sale> implements ISaleRe
         { $limit: limit },
       ];
 
-      const sales = await this.model.aggregate(pipeline);
-      const total = await this.model.countDocuments(matchStage.$match);
+      const sales = await this._model.aggregate(pipeline);
+      const total = await this._model.countDocuments(matchStage.$match);
 
       return {
         data: sales.map((doc: SaleDocument) => this.map(doc)),
@@ -77,7 +77,7 @@ export class MongoSaleRepository extends BaseRepository<Sale> implements ISaleRe
       { $sort:  { createdAt: -1 as const } },
     ];
 
-    const results = await this.model.aggregate(pipeline);
+    const results = await this._model.aggregate(pipeline);
 
     // Use existing mapping method
     return results.map((doc: SaleDocument) => this.map(doc));

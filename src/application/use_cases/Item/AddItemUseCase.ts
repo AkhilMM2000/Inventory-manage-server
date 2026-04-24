@@ -10,7 +10,7 @@ import { ItemMapper } from "../../mappers/ItemMapper";
 export class AddItemUseCase implements IAddItemUseCase  {
   constructor(
     @inject("IItemRepository")
-    private itemRepository: IItemRepository
+    private _itemRepository: IItemRepository
   ) {}
 
   async execute(data: AddItemRequestDTO): Promise<ItemResponseDTO> {
@@ -23,7 +23,7 @@ export class AddItemUseCase implements IAddItemUseCase  {
       price,
     };
 
-    const createdItem = await this.itemRepository.create(item);
+    const createdItem = await this._itemRepository.create(item);
     return ItemMapper.toResponse(createdItem);
   }
 }

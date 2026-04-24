@@ -12,17 +12,17 @@ import { registerSchema, loginSchema } from "../validators/UserValidator";
 export class UserController {
     constructor(
     @inject("ILoginUserUseCase")
-   private loginUserUseCase: ILoginUserUseCase,
+   private _loginUserUseCase: ILoginUserUseCase,
    @inject("IUserAuthUseCase")
-   private registerUseCase:IUserAuthUseCase,
+   private _registerUseCase:IUserAuthUseCase,
    @inject("IRefreshAccessTokenUseCase")
-   private refreshTokenUseCase:IRefreshAccessTokenUseCase
+   private _refreshTokenUseCase:IRefreshAccessTokenUseCase
   ) {}
   async register(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const validData = registerSchema.parse({ body: req.body });
     
-      const user = await this.registerUseCase.execute(validData.body);
+      const user = await this._registerUseCase.execute(validData.body);
 
       res.status(HTTP_STATUS_CODES.CREATED).json({ user });
     } catch (err) {
@@ -32,7 +32,7 @@ export class UserController {
  async login(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const validData = loginSchema.parse({ body: req.body });
-    const { accessToken, refreshToken, user } = await this.loginUserUseCase.execute(validData.body);
+    const { accessToken, refreshToken, user } = await this._loginUserUseCase.execute(validData.body);
     // ✅ Set refreshToken in HTTP-only cookie
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -54,7 +54,7 @@ export class UserController {
   try {
     const refreshToken = req.cookies["refreshToken"];
 
-    const accessToken =await this.refreshTokenUseCase.execute(refreshToken);
+    const accessToken =await this._refreshTokenUseCase.execute(refreshToken);
 
      res.status(HTTP_STATUS_CODES.OK).json({ accessToken });
   } catch (err) {

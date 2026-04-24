@@ -11,17 +11,17 @@ import { CustomerMapper } from "../../mappers/CustomerMapper";
 @injectable()
 export class GetCustomerLedgerUseCase implements  ICustomerLedgerUseCase {
   constructor(
-    @inject("ISaleRepository") private saleRepo: ISaleRepository,
-    @inject("ICustomerRepository") private customerRepo: ICustomerRepository
+    @inject("ISaleRepository") private _saleRepo: ISaleRepository,
+    @inject("ICustomerRepository") private _customerRepo: ICustomerRepository
   ) {}
 
   async execute(customerId: string):Promise<CustomerLedgerResponseDTO> {
-    const customer = await this.customerRepo.findById(customerId);
+    const customer = await this._customerRepo.findById(customerId);
     if (!customer) {
       throw new AppError("Customer not found", HTTP_STATUS_CODES.NOT_FOUND);
     }
 
-    const sales = await this.saleRepo.getSalesByCustomer(customerId);
+    const sales = await this._saleRepo.getSalesByCustomer(customerId);
 
     const summary = {
       totalOrders: sales.length,

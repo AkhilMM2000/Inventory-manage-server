@@ -13,10 +13,10 @@ import { SaleMapper } from "../../mappers/SaleMapper";
 export class  CreateSale implements ICreateSaleUseCase{
   constructor(
     @inject("ISaleRepository")
-    private saleRepository: ISaleRepository,
+    private _saleRepository: ISaleRepository,
 
     @inject("IItemRepository")
-    private itemRepository: IItemRepository
+    private _itemRepository: IItemRepository
   ) {}
 
   async execute(data: CreateSaleRequestDTO): Promise<SaleResponseDTO> {
@@ -26,7 +26,7 @@ export class  CreateSale implements ICreateSaleUseCase{
     let totalAmount = 0;
 
     for (const item of items) {
-      const found = await this.itemRepository.findById(item.itemId);
+      const found = await this._itemRepository.findById(item.itemId);
 
       if (!found) {
         throw new EntityNotFoundError(`Item with ID ${item.itemId}`);
@@ -39,7 +39,7 @@ export class  CreateSale implements ICreateSaleUseCase{
       totalAmount += item.quantity * item.unitPrice;
 
       // Reduce stock
-      await this.itemRepository.reduceItemStock(item.itemId, item.quantity);
+      await this._itemRepository.reduceItemStock(item.itemId, item.quantity);
     }
 
     const newSale: Sale = {
@@ -50,7 +50,7 @@ export class  CreateSale implements ICreateSaleUseCase{
       totalAmount,
     };
 
-    const sale = await this.saleRepository.create(newSale);
+    const sale = await this._saleRepository.create(newSale);
     return SaleMapper.toResponse(sale);
   }
 }

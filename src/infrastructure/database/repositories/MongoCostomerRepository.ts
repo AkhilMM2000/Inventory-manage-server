@@ -11,7 +11,7 @@ import { BaseRepository } from "./BaseRepository";
 @injectable()
 export class MongoCustomerRepository   extends BaseRepository<Customer> implements ICustomerRepository 
 {
-  protected model = CustomerModel;
+  protected _model = CustomerModel;
 
   protected map(doc: CustomerDocument & { salesCount?: number }): Customer {
     return {
@@ -31,7 +31,7 @@ export class MongoCustomerRepository   extends BaseRepository<Customer> implemen
       const regex = new RegExp(search, "i");
       const skip = (page - 1) * limit;
 
-      const results = await this.model.aggregate([
+      const results = await this._model.aggregate([
         {
           $match: {
             $or: [

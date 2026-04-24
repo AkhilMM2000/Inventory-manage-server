@@ -13,21 +13,21 @@ import { createCustomerSchema, updateCustomerSchema } from "../validators/Custom
 export class CustomerController{
    constructor(
     @inject("IAddCustomerUseCase")
-    private addCustomerUseCase: IAddCustomerUseCase,
+    private _addCustomerUseCase: IAddCustomerUseCase,
     @inject("IGetAllCustomerUseCase")
-    private getAllCustomersUseCase: IGetAllCustomers,
+    private _getAllCustomersUseCase: IGetAllCustomers,
     @inject("IUpdateCustomerUseCase")
-    private updateAllCustomerUseCase:IUpdateCustomerUseCase,
+    private _updateAllCustomerUseCase:IUpdateCustomerUseCase,
     @inject("IDeleteCustomerUseCase")
-    private deleteCustomerUseCase:IDeleteCustomerUseCase,
+    private _deleteCustomerUseCase:IDeleteCustomerUseCase,
     @inject("ICustomerLedgerUseCase")
-    private getCustomerLedgerUseCase:ICustomerLedgerUseCase
+    private _getCustomerLedgerUseCase:ICustomerLedgerUseCase
   ) {}
   async addCustomer(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       console.log(req.body,'customer')
       const validData = createCustomerSchema.parse({ body: req.body });
-      const customer = await this.addCustomerUseCase.execute(validData.body);
+      const customer = await this._addCustomerUseCase.execute(validData.body);
       res.status(HTTP_STATUS_CODES.CREATED).json({ customer });
     } catch (error) {
       next(error);
@@ -41,7 +41,7 @@ export class CustomerController{
       const search = (req.query.search as string) || "";
 
      
-      const result = await this.getAllCustomersUseCase.execute(page, limit, search);
+      const result = await this._getAllCustomersUseCase.execute(page, limit, search);
 
       res.status(HTTP_STATUS_CODES.OK).json(result);
     } catch (error) {
@@ -57,7 +57,7 @@ export class CustomerController{
     });
 
     
-    const customer = await this.updateAllCustomerUseCase.execute(
+    const customer = await this._updateAllCustomerUseCase.execute(
       validData.params.customerId, 
       validData.body as any
     );
@@ -70,7 +70,7 @@ export class CustomerController{
   try {
     const { customerId } = req.params;
    
-    await this.deleteCustomerUseCase.execute(customerId);
+    await this._deleteCustomerUseCase.execute(customerId);
 res.status(HTTP_STATUS_CODES.OK).json({ message: "Customer deleted successfully" });
   } catch (error) {
     next(error);
@@ -81,7 +81,7 @@ res.status(HTTP_STATUS_CODES.OK).json({ message: "Customer deleted successfully"
     try {
       const { customerId } = req.params;
       
-      const ledger = await this.getCustomerLedgerUseCase.execute(customerId);
+      const ledger = await this._getCustomerLedgerUseCase.execute(customerId);
       console.log(ledger,'customer ledger loead')
       res.status(HTTP_STATUS_CODES.OK).json(ledger);
     } catch (error) {

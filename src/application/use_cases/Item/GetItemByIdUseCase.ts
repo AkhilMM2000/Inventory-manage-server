@@ -10,11 +10,11 @@ import { ItemMapper } from "../../mappers/ItemMapper";
 export class GetItemByIdUseCase implements IGetItemByIdUseCase {
   constructor(
     @inject("IItemRepository")
-    private itemRepository: IItemRepository
+    private _itemRepository: IItemRepository
   ) {}
 
   async execute(id: string): Promise<ItemResponseDTO>{
-    const item = await this.itemRepository.findById(id);
+    const item = await this._itemRepository.findById(id);
 
     if (!item) {
       throw new EntityNotFoundError("Item");

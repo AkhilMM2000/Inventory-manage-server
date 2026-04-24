@@ -11,7 +11,7 @@ import { CustomerMapper } from "../../mappers/CustomerMapper";
 export class AddCustomer implements IAddCustomerUseCase {
   constructor(
     @inject("ICustomerRepository")
-    private customerRepository: ICustomerRepository
+    private _customerRepository: ICustomerRepository
   ) {}
 
   async execute(data: AddCustomerRequestDTO): Promise<CustomerResponseDTO> {
@@ -22,7 +22,7 @@ export class AddCustomer implements IAddCustomerUseCase {
       mobile,
     };
 
-    const customer = await this.customerRepository.create(newCustomer);
+    const customer = await this._customerRepository.create(newCustomer);
     return CustomerMapper.toResponse(customer);
   }
 }

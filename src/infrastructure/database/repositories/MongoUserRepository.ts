@@ -6,7 +6,7 @@ import { UserDocument, UserModel } from "../models/UserSchema";
 import { BaseRepository } from "./BaseRepository";
 @injectable()
 export class MongoUserRepository extends BaseRepository<User> implements UserRepository {
-  protected model = UserModel
+  protected _model = UserModel
     protected map(userDoc:UserDocument ): User {
     return {
       id: userDoc._id.toString(),
@@ -19,7 +19,7 @@ export class MongoUserRepository extends BaseRepository<User> implements UserRep
   
 
   async findByEmail(email: string): Promise<User | null> {
-    const user = await this.model.findOne({ email });
+    const user = await this._model.findOne({ email });
     if (!user) return null;
 
     return {

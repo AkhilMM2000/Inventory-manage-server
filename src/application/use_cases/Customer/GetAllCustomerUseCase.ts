@@ -12,7 +12,7 @@ import { CustomerMapper } from "../../mappers/CustomerMapper";
 export class GetAllCustomers implements IGetAllCustomers {
   constructor(
     @inject("ICustomerRepository")
-    private customerRepository: ICustomerRepository
+    private _customerRepository: ICustomerRepository
   ) {}
 
   async execute(page: number, limit: number, search?: string):Promise<PaginatedResult<CustomerResponseDTO>> {
@@ -23,7 +23,7 @@ export class GetAllCustomers implements IGetAllCustomers {
       );
     }
 
-    const result = await this.customerRepository.getAllCustomers(page, limit, search);
+    const result = await this._customerRepository.getAllCustomers(page, limit, search);
     return CustomerMapper.toPaginatedResponse(result);
   }
 }

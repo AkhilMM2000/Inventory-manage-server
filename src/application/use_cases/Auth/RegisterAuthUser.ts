@@ -10,21 +10,21 @@ import { UserMapper } from "../../mappers/UserMapper";
 @injectable()
 export class RegisterUserUseCase implements IUserAuthUseCase {
   constructor(
-    @inject("IUserRepository") private userRepository: UserRepository,
-    @inject("IHashService") private hashService: HashService
+    @inject("IUserRepository") private _userRepository: UserRepository,
+    @inject("IHashService") private _hashService: HashService
   ) {}
   
   async execute(data: RegisterRequestDTO): Promise<UserResponseDTO> {
     const { fullName, email, password } = data;
 
     // Check if user already exists
-    const existing = await this.userRepository.findByEmail(email);
+    const existing = await this._userRepository.findByEmail(email);
     if (existing) {
       throw new UserAlreadyExistsError();
     }
 
     // Hash the password
-    const hashedPassword = await this.hashService.hash(password);
+    const hashedPassword = await this._hashService.hash(password);
 
     // Create and store the user
     const newUser: User = {
@@ -33,7 +33,7 @@ export class RegisterUserUseCase implements IUserAuthUseCase {
       password: hashedPassword,
     };
 
-    const createdUser = await this.userRepository.create(newUser);
+    const createdUser = await this._userRepository.create(newUser);
 
     return UserMapper.toResponse(createdUser);
   }

@@ -10,11 +10,11 @@ import { CustomerMapper } from "../../mappers/CustomerMapper";
 export class UpdateCustomerUseCase implements  IUpdateCustomerUseCase   {
   constructor(
     @inject("ICustomerRepository")
-  private customerRepository: ICustomerRepository
+  private _customerRepository: ICustomerRepository
   ) {}
 
   async execute(id: string, updatedItem: Partial<Customer>): Promise<CustomerResponseDTO> {
-    const updated = await this.customerRepository.update(id, updatedItem);
+    const updated = await this._customerRepository.update(id, updatedItem);
 
     if (!updated) {
       throw new EntityNotFoundError("Customer");

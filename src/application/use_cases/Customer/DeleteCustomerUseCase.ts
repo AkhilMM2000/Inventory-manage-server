@@ -9,11 +9,11 @@ import { IDeleteCustomerUseCase } from "./IDeleteCustomerUseCase";
 export class DeleteCustomerUseCase implements IDeleteCustomerUseCase {
   constructor(
     @inject("ICustomerRepository")
-    private customerRepository: ICustomerRepository
+    private _customerRepository: ICustomerRepository
   ) {}
 
   async execute(customerId: string): Promise<void> {
-    const deleted = await this.customerRepository.delete(customerId);
+    const deleted = await this._customerRepository.delete(customerId);
     if (!deleted) {
       throw new AppError(
         ERROR_MESSAGES.CUSTOMER_NOT_FOUND,

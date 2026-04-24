@@ -10,11 +10,11 @@ import { ItemMapper } from "../../mappers/ItemMapper";
 export class SearchItemsUseCase implements ISearchItemsUseCase {
   constructor(
     @inject("IItemRepository")
-    private itemRepository: IItemRepository
+    private _itemRepository: IItemRepository
   ) {}
 
   async execute(query: string, page = 1, limit = 10): Promise<PaginatedResult<ItemResponseDTO>> {
-    const result = await this.itemRepository.searchItems(query, page, limit);
+    const result = await this._itemRepository.searchItems(query, page, limit);
     return ItemMapper.toPaginatedResponse(result);
   }
 }

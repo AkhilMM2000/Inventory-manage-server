@@ -13,7 +13,7 @@ import { SaleMapper } from "../../mappers/SaleMapper";
 export class GetAllSales implements IGetAllSales {
   constructor(
     @inject("ISaleRepository")
-    private saleRepository: ISaleRepository
+    private _saleRepository: ISaleRepository
   ) {}
 
   async execute(
@@ -31,7 +31,7 @@ export class GetAllSales implements IGetAllSales {
       );
     }
 
-    const result = await this.saleRepository.getAllSales(page, limit, search, paymentType);
+    const result = await this._saleRepository.getAllSales(page, limit, search, paymentType);
     return SaleMapper.toPaginatedResponse(result);
   }
 }

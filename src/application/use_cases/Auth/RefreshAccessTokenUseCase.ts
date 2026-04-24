@@ -9,7 +9,7 @@ import { IRefreshAccessTokenUseCase } from "./IRefreshAccessTokenUseCase";
 @injectable()
 export class RefreshAccessToken implements IRefreshAccessTokenUseCase {
   constructor(
-    @inject("IAuthService") private authService: AuthService
+    @inject("IAuthService") private _authService: AuthService
   ) {}
 
   execute(refreshToken: string): string {
@@ -19,12 +19,12 @@ export class RefreshAccessToken implements IRefreshAccessTokenUseCase {
 
     let payload: TokenPayload;
     try {
-      payload = this.authService.verifyRefreshToken(refreshToken);
+      payload = this._authService.verifyRefreshToken(refreshToken);
     } catch {
       throw new AppError(ERROR_MESSAGES.INVALID_REFRESH_TOKEN, HTTP_STATUS_CODES.FORBIDDEN);
     }
 
-    return this.authService.generateAccessToken({
+    return this._authService.generateAccessToken({
       userId: payload.userId,
       email: payload.email,
     });
