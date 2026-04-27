@@ -33,13 +33,17 @@ export class UserController {
   try {
     const validData = loginSchema.parse({ body: req.body });
     const { accessToken, refreshToken, user } = await this._loginUserUseCase.execute(validData.body);
-    // ✅ Set refreshToken in HTTP-only cookie
-    res.cookie("refreshToken", refreshToken, {
+    
+    const isProduction = process.env.NODE_ENV === "production";
+    const cookieOptions = {
       httpOnly: true,
-      secure: true, 
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+      secure: isProduction,
+      sameSite: isProduction ? "none" as const : "lax" as const,
+      maxAge: parseInt(process.env.COOKIE_MAX_AGE || "604800000", 10),
+    };
+
+    // ✅ Set refreshToken in HTTP-only cookie
+    res.cookie("refreshToken", refreshToken, cookieOptions);
 
     res.status(HTTP_STATUS_CODES.OK).json({
       accessToken,
@@ -74,15 +78,15 @@ export class UserController {
 
  async logout(req: Request, res: Response, next: NextFunction) {
   try {
-
-    res.clearCookie("refreshToken", {
+    const isProduction = process.env.NODE_ENV === "production";
+    const cookieOptions = {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      secure: isProduction,
+      sameSite: isProduction ? "none" as const : "lax" as const,
+      maxAge: parseInt(process.env.COOKIE_MAX_AGE || "604800000", 10),
+    };
 
-    });
-
+    res.clearCookie("refreshToken", cookieOptions);
   
      res.status(HTTP_STATUS_CODES.OK).json({ message: ERROR_MESSAGES.LOGOUT_SUCCESS });
   } catch (err) {
