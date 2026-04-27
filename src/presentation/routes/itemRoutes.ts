@@ -2,16 +2,18 @@ import { Router } from "express";
 import { container } from "tsyringe";
 import { itemController } from "../../infrastructure/config/controllers"; 
 import { AuthMiddleware } from "../../middleware/AuthMiddleware"; 
+import { API_ROUTES } from "../../constants/ApiRoutes";
+
 const router = Router();
 const authMiddleware = container.resolve(AuthMiddleware);
 
 router
-  .post("/", authMiddleware.protectRoute(), itemController.addItem.bind(itemController))
-  .get("/", authMiddleware.protectRoute(), itemController.getAllItems.bind(itemController))
-  .get("/search", authMiddleware.protectRoute(), itemController.searchItems.bind(itemController))
-  .get("/:itemId", authMiddleware.protectRoute(),itemController.getItemById.bind(itemController))
-  .put("/:itemId", authMiddleware.protectRoute(), itemController.updateItem.bind(itemController))
-  .delete("/:itemId",authMiddleware.protectRoute(),itemController.deleteItem.bind(itemController))
+  .post(API_ROUTES.ITEMS.ROOT, authMiddleware.protectRoute(), itemController.addItem.bind(itemController))
+  .get(API_ROUTES.ITEMS.ROOT, authMiddleware.protectRoute(), itemController.getAllItems.bind(itemController))
+  .get(API_ROUTES.ITEMS.SEARCH, authMiddleware.protectRoute(), itemController.searchItems.bind(itemController))
+  .get(API_ROUTES.ITEMS.BY_ID, authMiddleware.protectRoute(),itemController.getItemById.bind(itemController))
+  .put(API_ROUTES.ITEMS.BY_ID, authMiddleware.protectRoute(), itemController.updateItem.bind(itemController))
+  .delete(API_ROUTES.ITEMS.BY_ID,authMiddleware.protectRoute(),itemController.deleteItem.bind(itemController))
 export default router;
 
 
